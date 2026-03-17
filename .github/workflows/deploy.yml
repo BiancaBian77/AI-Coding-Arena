@@ -2,7 +2,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: ['main']
+    branches: ['main', 'claude/ai-coding-assessment-tool-oFZ58']
 
 permissions:
   contents: read
