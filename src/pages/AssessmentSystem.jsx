@@ -76,10 +76,14 @@ export default function AssessmentSystem() {
           <h1 className="text-4xl sm:text-5xl font-extrabold text-gray-900 mb-6 tracking-tight">
             五维<span className="text-indigo-600">能力评估</span>体系
           </h1>
-          <p className="text-lg text-gray-500 max-w-2xl mx-auto leading-relaxed">
-            我们定义了 AI 时代优秀工程师的五个核心能力维度，通过三阶段测试进行全方位评估。
-            综合得分公式：<code className="text-sm bg-indigo-50 text-indigo-700 px-2 py-1 rounded">独立Coding×20% + AI提效×25% + AI批判×25% + 端到端×20% + 跨领域×10%</code>
+          <p className="text-lg text-gray-500 max-w-3xl mx-auto leading-relaxed">
+            我们定义了 AI 时代优秀工程师的五个核心能力维度，通过三阶段测试进行全方位评估
           </p>
+          <div className="mt-4">
+            <code className="text-sm bg-indigo-50 text-indigo-700 px-4 py-2 rounded-lg inline-block">
+              综合得分 = 独立Coding×20% + AI提效×25% + AI批判×25% + 端到端×20% + 跨领域×10%
+            </code>
+          </div>
         </div>
       </section>
 
