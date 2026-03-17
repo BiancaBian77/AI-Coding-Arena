@@ -19,6 +19,7 @@ import mockCandidates, {
   getScoreColor,
   getScoreRating,
   getStatusStyle,
+  generateScoreReasoning,
 } from '../data/mockCandidates';
 
 export default function CandidateDetail() {
@@ -47,6 +48,7 @@ export default function CandidateDetail() {
 
   const overallRating = getScoreRating(candidate.overallScore);
   const overallColor = getScoreColor(candidate.overallScore);
+  const reasoning = generateScoreReasoning(candidate);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -116,9 +118,12 @@ export default function CandidateDetail() {
             <Target size={20} className="text-indigo-500" />
             能力评估详情
           </h2>
+          <div className="text-xs text-gray-400 mb-3 flex items-center gap-1">
+            <span>点击任意维度卡片查看详细评分依据</span>
+          </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
             {Object.entries(candidate.scores).map(([key, value]) => (
-              <ScoreCard key={key} label={scoreLabels[key]} score={value} />
+              <ScoreCard key={key} label={scoreLabels[key]} score={value} reasoning={reasoning[key]} />
             ))}
           </div>
 
