@@ -1,34 +1,40 @@
 import { useState } from 'react';
 import { FileText, Folder, Eye } from 'lucide-react';
 
+const PART_META = {
+  A: { difficulty: '\u4e2d\u7b49', duration: '40 min', maxScore: 40 },
+  B: { difficulty: '\u56f0\u96be', duration: '40 min', maxScore: 35 },
+  C: { difficulty: '\u4e2d\u7b49', duration: '20 min', maxScore: 25 },
+};
+
 const PROBLEMS = {
   A: {
-    title: 'Part A: Agent 任务调度算法',
-    content: `## 题目描述
+    title: 'Part A: Agent \u4efb\u52a1\u8c03\u5ea6\u7b97\u6cd5',
+    content: `## \u9898\u76ee\u63cf\u8ff0
 
-你正在为一个多 Agent 系统设计任务调度器。系统中有 \`n\` 个 Agent，每个 Agent 有不同的能力值和当前负载。现在有 \`m\` 个任务需要分配。
+\u4f60\u6b63\u5728\u4e3a\u4e00\u4e2a\u591a Agent \u7cfb\u7edf\u8bbe\u8ba1\u4efb\u52a1\u8c03\u5ea6\u5668\u3002\u7cfb\u7edf\u4e2d\u6709 \`n\` \u4e2a Agent\uff0c\u6bcf\u4e2a Agent \u6709\u4e0d\u540c\u7684\u80fd\u529b\u503c\u548c\u5f53\u524d\u8d1f\u8f7d\u3002\u73b0\u5728\u6709 \`m\` \u4e2a\u4efb\u52a1\u9700\u8981\u5206\u914d\u3002
 
-每个任务有：
-- \`difficulty\`：难度值（整数）
-- \`deadline\`：截止时间（整数，单位：秒）
-- \`priority\`：优先级（1-5，5最高）
+\u6bcf\u4e2a\u4efb\u52a1\u6709\uff1a
+- \`difficulty\`\uff1a\u96be\u5ea6\u503c\uff08\u6574\u6570\uff09
+- \`deadline\`\uff1a\u622a\u6b62\u65f6\u95f4\uff08\u6574\u6570\uff0c\u5355\u4f4d\uff1a\u79d2\uff09
+- \`priority\`\uff1a\u4f18\u5148\u7ea7\uff081-5\uff0c5\u6700\u9ad8\uff09
 
-每个 Agent 有：
-- \`capability\`：能力值（整数）
-- \`current_load\`：当前负载（整数）
-- \`max_load\`：最大负载（整数）
+\u6bcf\u4e2a Agent \u6709\uff1a
+- \`capability\`\uff1a\u80fd\u529b\u503c\uff08\u6574\u6570\uff09
+- \`current_load\`\uff1a\u5f53\u524d\u8d1f\u8f7d\uff08\u6574\u6570\uff09
+- \`max_load\`\uff1a\u6700\u5927\u8d1f\u8f7d\uff08\u6574\u6570\uff09
 
-### 要求
+### \u8981\u6c42
 
-实现函数 \`schedule_tasks(agents, tasks)\`，返回一个分配方案（字典：task_id -> agent_id），满足：
+\u5b9e\u73b0\u51fd\u6570 \`schedule_tasks(agents, tasks)\`\uff0c\u8fd4\u56de\u4e00\u4e2a\u5206\u914d\u65b9\u6848\uff08\u5b57\u5178\uff1atask_id -> agent_id\uff09\uff0c\u6ee1\u8db3\uff1a
 
-1. 每个任务只能分配给一个 Agent
-2. Agent 的 \`capability\` 必须 >= 任务的 \`difficulty\`
-3. 分配后 Agent 的负载不能超过 \`max_load\`
-4. 优先级高的任务优先被分配
-5. 在满足约束的前提下，最大化被分配的任务数量
+1. \u6bcf\u4e2a\u4efb\u52a1\u53ea\u80fd\u5206\u914d\u7ed9\u4e00\u4e2a Agent
+2. Agent \u7684 \`capability\` \u5fc5\u987b >= \u4efb\u52a1\u7684 \`difficulty\`
+3. \u5206\u914d\u540e Agent \u7684\u8d1f\u8f7d\u4e0d\u80fd\u8d85\u8fc7 \`max_load\`
+4. \u4f18\u5148\u7ea7\u9ad8\u7684\u4efb\u52a1\u4f18\u5148\u88ab\u5206\u914d
+5. \u5728\u6ee1\u8db3\u7ea6\u675f\u7684\u524d\u63d0\u4e0b\uff0c\u6700\u5927\u5316\u88ab\u5206\u914d\u7684\u4efb\u52a1\u6570\u91cf
 
-### 输入格式
+### \u8f93\u5165\u683c\u5f0f
 
 \`\`\`python
 agents = [
@@ -45,84 +51,84 @@ tasks = [
 ]
 \`\`\`
 
-### 输出格式
+### \u8f93\u51fa\u683c\u5f0f
 
 \`\`\`python
 {0: 1, 1: 0, 2: 0, 3: 2}  # task_id -> agent_id
 \`\`\`
 
-### 评分标准
+### \u8bc4\u5206\u6807\u51c6
 
-- 正确性（60%）：通过测试用例
-- 时间复杂度（20%）：分析并优化算法复杂度
-- 代码质量（20%）：可读性、注释、边界处理`,
+- \u6b63\u786e\u6027\uff0860%\uff09\uff1a\u901a\u8fc7\u6d4b\u8bd5\u7528\u4f8b
+- \u65f6\u95f4\u590d\u6742\u5ea6\uff0820%\uff09\uff1a\u5206\u6790\u5e76\u4f18\u5316\u7b97\u6cd5\u590d\u6742\u5ea6
+- \u4ee3\u7801\u8d28\u91cf\uff0820%\uff09\uff1a\u53ef\u8bfb\u6027\u3001\u6ce8\u91ca\u3001\u8fb9\u754c\u5904\u7406`,
   },
   B: {
-    title: 'Part B: 构建 RAG Agent',
-    content: `## 题目描述
+    title: 'Part B: \u6784\u5efa RAG Agent',
+    content: `## \u9898\u76ee\u63cf\u8ff0
 
-请设计并实现一个基于 RAG（Retrieval-Augmented Generation）的问答 Agent。
+\u8bf7\u8bbe\u8ba1\u5e76\u5b9e\u73b0\u4e00\u4e2a\u57fa\u4e8e RAG\uff08Retrieval-Augmented Generation\uff09\u7684\u95ee\u7b54 Agent\u3002
 
-### 背景
+### \u80cc\u666f
 
-你需要构建一个能够基于给定知识库回答问题的 Agent。知识库是一组技术文档片段（已提供）。
+\u4f60\u9700\u8981\u6784\u5efa\u4e00\u4e2a\u80fd\u591f\u57fa\u4e8e\u7ed9\u5b9a\u77e5\u8bc6\u5e93\u56de\u7b54\u95ee\u9898\u7684 Agent\u3002\u77e5\u8bc6\u5e93\u662f\u4e00\u7ec4\u6280\u672f\u6587\u6863\u7247\u6bb5\uff08\u5df2\u63d0\u4f9b\uff09\u3002
 
-### 要求
+### \u8981\u6c42
 
-实现一个 \`RAGAgent\` 类，包含以下功能：
+\u5b9e\u73b0\u4e00\u4e2a \`RAGAgent\` \u7c7b\uff0c\u5305\u542b\u4ee5\u4e0b\u529f\u80fd\uff1a
 
 \`\`\`python
 class RAGAgent:
     def __init__(self, documents: list[str]):
-        """初始化 RAG Agent，处理并索引文档"""
+        """\u521d\u59cb\u5316 RAG Agent\uff0c\u5904\u7406\u5e76\u7d22\u5f15\u6587\u6863"""
         pass
 
     def retrieve(self, query: str, top_k: int = 3) -> list[str]:
-        """检索最相关的 top_k 个文档片段"""
+        """\u68c0\u7d22\u6700\u76f8\u5173\u7684 top_k \u4e2a\u6587\u6863\u7247\u6bb5"""
         pass
 
     def generate_answer(self, query: str) -> str:
-        """基于检索结果生成回答"""
+        """\u57fa\u4e8e\u68c0\u7d22\u7ed3\u679c\u751f\u6210\u56de\u7b54"""
         pass
 
     def chat(self, query: str) -> dict:
-        """完整的问答流程，返回答案和引用来源"""
+        """\u5b8c\u6574\u7684\u95ee\u7b54\u6d41\u7a0b\uff0c\u8fd4\u56de\u7b54\u6848\u548c\u5f15\u7528\u6765\u6e90"""
         pass
 \`\`\`
 
-### 具体要求
+### \u5177\u4f53\u8981\u6c42
 
-1. **文档处理**：对文档进行分块（chunk），每块不超过 512 个字符
-2. **向量检索**：使用 TF-IDF 或 BM25 实现简单的文本检索（不要求使用外部向量数据库）
-3. **答案生成**：模拟 LLM 调用，将检索到的内容组合成结构化回答
-4. **引用追踪**：返回结果中需要标注引用了哪些文档片段
+1. **\u6587\u6863\u5904\u7406**\uff1a\u5bf9\u6587\u6863\u8fdb\u884c\u5206\u5757\uff08chunk\uff09\uff0c\u6bcf\u5757\u4e0d\u8d85\u8fc7 512 \u4e2a\u5b57\u7b26
+2. **\u5411\u91cf\u68c0\u7d22**\uff1a\u4f7f\u7528 TF-IDF \u6216 BM25 \u5b9e\u73b0\u7b80\u5355\u7684\u6587\u672c\u68c0\u7d22\uff08\u4e0d\u8981\u6c42\u4f7f\u7528\u5916\u90e8\u5411\u91cf\u6570\u636e\u5e93\uff09
+3. **\u7b54\u6848\u751f\u6210**\uff1a\u6a21\u62df LLM \u8c03\u7528\uff0c\u5c06\u68c0\u7d22\u5230\u7684\u5185\u5bb9\u7ec4\u5408\u6210\u7ed3\u6784\u5316\u56de\u7b54
+4. **\u5f15\u7528\u8ffd\u8e2a**\uff1a\u8fd4\u56de\u7ed3\u679c\u4e2d\u9700\u8981\u6807\u6ce8\u5f15\u7528\u4e86\u54ea\u4e9b\u6587\u6863\u7247\u6bb5
 
-### 测试文档
+### \u6d4b\u8bd5\u6587\u6863
 
 \`\`\`python
 documents = [
-    "Transformer 模型由 Vaswani 等人在 2017 年提出...",
-    "RAG 技术结合了检索和生成两种范式...",
-    "向量数据库如 Pinecone、Milvus 用于存储嵌入向量...",
-    "LangChain 是一个用于构建 LLM 应用的框架...",
-    "Prompt Engineering 是优化 AI 输出的关键技术...",
+    "Transformer \u6a21\u578b\u7531 Vaswani \u7b49\u4eba\u5728 2017 \u5e74\u63d0\u51fa...",
+    "RAG \u6280\u672f\u7ed3\u5408\u4e86\u68c0\u7d22\u548c\u751f\u6210\u4e24\u79cd\u8303\u5f0f...",
+    "\u5411\u91cf\u6570\u636e\u5e93\u5982 Pinecone\u3001Milvus \u7528\u4e8e\u5b58\u50a8\u5d4c\u5165\u5411\u91cf...",
+    "LangChain \u662f\u4e00\u4e2a\u7528\u4e8e\u6784\u5efa LLM \u5e94\u7528\u7684\u6846\u67b6...",
+    "Prompt Engineering \u662f\u4f18\u5316 AI \u8f93\u51fa\u7684\u5173\u952e\u6280\u672f...",
 ]
 \`\`\`
 
-### 评分标准
+### \u8bc4\u5206\u6807\u51c6
 
-- 架构设计（30%）：类结构、模块划分
-- 检索质量（30%）：相关性排序的准确度
-- 代码质量（20%）：可读性、异常处理
-- 创新性（20%）：额外功能（如对话历史、重排序）`,
+- \u67b6\u6784\u8bbe\u8ba1\uff0830%\uff09\uff1a\u7c7b\u7ed3\u6784\u3001\u6a21\u5757\u5212\u5206
+- \u68c0\u7d22\u8d28\u91cf\uff0830%\uff09\uff1a\u76f8\u5173\u6027\u6392\u5e8f\u7684\u51c6\u786e\u5ea6
+- \u4ee3\u7801\u8d28\u91cf\uff0820%\uff09\uff1a\u53ef\u8bfb\u6027\u3001\u5f02\u5e38\u5904\u7406
+- \u521b\u65b0\u6027\uff0820%\uff09\uff1a\u989d\u5916\u529f\u80fd\uff08\u5982\u5bf9\u8bdd\u5386\u53f2\u3001\u91cd\u6392\u5e8f\uff09`,
   },
   C: {
-    title: 'Part C: AI 代码审查',
-    content: `## 题目描述
+    title: 'Part C: AI \u4ee3\u7801\u5ba1\u67e5',
+    content: `## \u9898\u76ee\u63cf\u8ff0
 
-以下是一段 AI 生成的代码，用于实现一个简单的 LRU Cache。代码中包含若干 Bug 和设计问题，请找出并修复。
+\u4ee5\u4e0b\u662f\u4e00\u6bb5 AI \u751f\u6210\u7684\u4ee3\u7801\uff0c\u7528\u4e8e\u5b9e\u73b0\u4e00\u4e2a\u7b80\u5355\u7684 LRU Cache\u3002\u4ee3\u7801\u4e2d\u5305\u542b\u82e5\u5e72 Bug \u548c\u8bbe\u8ba1\u95ee\u9898\uff0c\u8bf7\u627e\u51fa\u5e76\u4fee\u590d\u3002
 
-### 待审查代码
+### \u5f85\u5ba1\u67e5\u4ee3\u7801
 
 \`\`\`python
 class LRUCache:
@@ -133,7 +139,7 @@ class LRUCache:
 
     def get(self, key):
         if key in self.cache:
-            # 移到最近使用
+            # \u79fb\u5230\u6700\u8fd1\u4f7f\u7528
             self.order.remove(key)
             self.order.append(key)
             return self.cache[key]
@@ -143,7 +149,7 @@ class LRUCache:
         if key in self.cache:
             self.order.remove(key)
         elif len(self.cache) >= self.capacity:
-            # 删除最久未使用
+            # \u5220\u9664\u6700\u4e45\u672a\u4f7f\u7528
             old = self.order[0]
             del self.order[0]
             del self.cache[old]
@@ -174,60 +180,83 @@ class LRUCache:
             del self.cache[old]
 \`\`\`
 
-### 要求
+### \u8981\u6c42
 
-1. **找出所有 Bug**：列出每个 Bug 的位置、原因和修复方案
-2. **性能分析**：分析当前实现的时间复杂度，指出性能瓶颈
-3. **重构建议**：提出使用更高效数据结构的方案（如 OrderedDict 或双向链表）
-4. **编写测试**：为修复后的代码编写单元测试
-5. **提交修复后的完整代码**
+1. **\u627e\u51fa\u6240\u6709 Bug**\uff1a\u5217\u51fa\u6bcf\u4e2a Bug \u7684\u4f4d\u7f6e\u3001\u539f\u56e0\u548c\u4fee\u590d\u65b9\u6848
+2. **\u6027\u80fd\u5206\u6790**\uff1a\u5206\u6790\u5f53\u524d\u5b9e\u73b0\u7684\u65f6\u95f4\u590d\u6742\u5ea6\uff0c\u6307\u51fa\u6027\u80fd\u74f6\u9888
+3. **\u91cd\u6784\u5efa\u8bae**\uff1a\u63d0\u51fa\u4f7f\u7528\u66f4\u9ad8\u6548\u6570\u636e\u7ed3\u6784\u7684\u65b9\u6848\uff08\u5982 OrderedDict \u6216\u53cc\u5411\u94fe\u8868\uff09
+4. **\u7f16\u5199\u6d4b\u8bd5**\uff1a\u4e3a\u4fee\u590d\u540e\u7684\u4ee3\u7801\u7f16\u5199\u5355\u5143\u6d4b\u8bd5
+5. **\u63d0\u4ea4\u4fee\u590d\u540e\u7684\u5b8c\u6574\u4ee3\u7801**
 
-### 评分标准
+### \u8bc4\u5206\u6807\u51c6
 
-- Bug 发现完整度（30%）
-- 修复方案质量（25%）
-- 性能优化建议（25%）
-- 测试覆盖度（20%）
+- Bug \u53d1\u73b0\u5b8c\u6574\u5ea6\uff0830%\uff09
+- \u4fee\u590d\u65b9\u6848\u8d28\u91cf\uff0825%\uff09
+- \u6027\u80fd\u4f18\u5316\u5efa\u8bae\uff0825%\uff09
+- \u6d4b\u8bd5\u8986\u76d6\u5ea6\uff0820%\uff09
 
-### 提示
+### \u63d0\u793a
 
-至少存在 **5 个** Bug 或设计问题。请仔细审查每一个方法。`,
+\u81f3\u5c11\u5b58\u5728 **5 \u4e2a** Bug \u6216\u8bbe\u8ba1\u95ee\u9898\u3002\u8bf7\u4ed4\u7ec6\u5ba1\u67e5\u6bcf\u4e00\u4e2a\u65b9\u6cd5\u3002`,
   },
 };
 
 export default function ProblemPanel({ activePart, onPartChange }) {
   const parts = ['A', 'B', 'C'];
   const icons = { A: FileText, B: Folder, C: Eye };
+  const meta = PART_META[activePart];
 
   return (
     <div className="flex flex-col h-full bg-white">
-      {/* Tabs */}
-      <div className="flex border-b border-gray-200 bg-gray-50 shrink-0">
-        {parts.map((part) => {
-          const Icon = icons[part];
-          return (
-            <button
-              key={part}
-              onClick={() => onPartChange(part)}
-              className={`flex items-center gap-1.5 px-4 py-2.5 text-sm font-medium transition-colors ${
-                activePart === part
-                  ? 'text-indigo-600 border-b-2 border-indigo-600 bg-white'
-                  : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'
-              }`}
-            >
-              <Icon size={15} />
-              Part {part}
-            </button>
-          );
-        })}
+      {/* Dark header bar */}
+      <div className="bg-slate-800 text-sm text-slate-300 px-4 py-2 shrink-0 flex items-center justify-between">
+        <span className="font-medium tracking-wide text-xs uppercase">Problem</span>
+        <div className="flex items-center gap-2">
+          {parts.map((part) => {
+            const Icon = icons[part];
+            return (
+              <button
+                key={part}
+                onClick={() => onPartChange(part)}
+                className={`flex items-center gap-1 px-2 py-0.5 text-xs rounded transition-colors ${
+                  activePart === part
+                    ? 'bg-slate-600 text-white'
+                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-700'
+                }`}
+              >
+                <Icon size={12} />
+                {part}
+              </button>
+            );
+          })}
+        </div>
       </div>
 
-      {/* Content */}
-      <div className="flex-1 overflow-y-auto p-5">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">
+      {/* Part info badges */}
+      <div className="px-5 pt-4 pb-2 border-b border-gray-100 shrink-0">
+        <h2 className="text-base font-semibold text-gray-900 mb-2">
           {PROBLEMS[activePart].title}
         </h2>
-        <div className="prose prose-sm prose-gray max-w-none">
+        <div className="flex items-center gap-2">
+          <span className={`px-2 py-0.5 text-xs rounded font-medium ${
+            meta.difficulty === '\u56f0\u96be'
+              ? 'bg-red-50 text-red-600'
+              : 'bg-amber-50 text-amber-600'
+          }`}>
+            {meta.difficulty}
+          </span>
+          <span className="px-2 py-0.5 text-xs rounded bg-blue-50 text-blue-600 font-medium">
+            {meta.duration}
+          </span>
+          <span className="px-2 py-0.5 text-xs rounded bg-emerald-50 text-emerald-600 font-medium">
+            {meta.maxScore} \u5206
+          </span>
+        </div>
+      </div>
+
+      {/* Scrollable content */}
+      <div className="flex-1 overflow-y-auto px-5 py-4">
+        <div className="prose prose-sm max-w-none">
           <ProblemMarkdown content={PROBLEMS[activePart].content} />
         </div>
       </div>
@@ -235,7 +264,7 @@ export default function ProblemPanel({ activePart, onPartChange }) {
   );
 }
 
-/* Simple markdown-like renderer (no external dep) */
+/* Simple markdown-like renderer */
 function ProblemMarkdown({ content }) {
   const lines = content.split('\n');
   const elements = [];
@@ -252,7 +281,7 @@ function ProblemMarkdown({ content }) {
         elements.push(
           <pre
             key={key++}
-            className="bg-gray-900 text-gray-100 rounded-lg p-4 text-xs leading-relaxed overflow-x-auto my-3"
+            className="bg-slate-900 text-slate-100 rounded-lg p-4 text-xs leading-relaxed overflow-x-auto my-3 border border-slate-700"
           >
             <code>{codeLines.join('\n')}</code>
           </pre>
@@ -318,10 +347,14 @@ function InlineCode({ text }) {
         part.startsWith('`') && part.endsWith('`') ? (
           <code
             key={i}
-            className="bg-indigo-50 text-indigo-700 px-1.5 py-0.5 rounded text-xs font-mono"
+            className="bg-slate-100 text-indigo-700 px-1.5 py-0.5 rounded text-xs font-mono border border-slate-200"
           >
             {part.slice(1, -1)}
           </code>
+        ) : part.startsWith('**') && part.endsWith('**') ? (
+          <strong key={i} className="font-semibold text-gray-800">
+            {part.slice(2, -2)}
+          </strong>
         ) : (
           <span key={i}>{part}</span>
         )

@@ -2,16 +2,16 @@ import { useState, useMemo } from 'react';
 import {
   LayoutDashboard,
   FileText,
-  SlidersHorizontal,
+  Sliders,
   Users,
+  Settings,
   CheckCircle,
   TrendingUp,
   HelpCircle,
   Plus,
   Save,
-  ArrowLeft,
 } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import DashboardLayout from '../components/layout/DashboardLayout';
 
 /* ─── mock data ─── */
 const mockCandidates = [
@@ -66,12 +66,11 @@ const dimensionLabels = [
 ];
 
 const defaultWeights = [20, 25, 25, 20, 10];
-
 const dimensionMockAvg = [72, 81, 68, 75, 65];
 
 /* ─── helpers ─── */
 function scoreDistribution(candidates) {
-  const bins = [0, 0, 0, 0, 0]; // 0-59, 60-69, 70-79, 80-89, 90-100
+  const bins = [0, 0, 0, 0, 0];
   candidates.forEach(({ score }) => {
     if (score < 60) bins[0]++;
     else if (score < 70) bins[1]++;
@@ -91,18 +90,28 @@ const partColors = {
   C: 'bg-purple-100 text-purple-700',
 };
 
-/* ─── tab definitions ─── */
-const tabs = [
-  { key: 'dashboard', label: '数据看板', icon: LayoutDashboard },
-  { key: 'questions', label: '题目管理', icon: FileText },
-  { key: 'scoring', label: '评分配置', icon: SlidersHorizontal },
-];
+/* ─── sidebar tab keys ─── */
+const tabKeys = ['dashboard', 'questions', 'scoring', 'candidates', 'settings'];
 
 /* ─── component ─── */
 export default function AdminDashboard() {
-  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('dashboard');
   const [weights, setWeights] = useState([...defaultWeights]);
+
+  const sidebarItems = [
+    { icon: LayoutDashboard, label: '数据看板', path: '#', active: activeTab === 'dashboard' },
+    { icon: FileText, label: '题目管理', path: '#', active: activeTab === 'questions' },
+    { icon: Sliders, label: '评分配置', path: '#', active: activeTab === 'scoring' },
+    { icon: Users, label: '候选人', path: '#', active: activeTab === 'candidates' },
+    { icon: Settings, label: '系统设置', path: '#', active: activeTab === 'settings' },
+  ];
+
+  // Override link behavior to use tab switching
+  const sidebarItemsWithClick = sidebarItems.map((item, i) => ({
+    ...item,
+    path: `/admin`,
+    onClick: () => setActiveTab(tabKeys[i]),
+  }));
 
   /* derived stats */
   const totalCandidates = mockCandidates.length;
@@ -125,73 +134,40 @@ export default function AdminDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* top bar */}
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-30">
-        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => navigate('/')}
-              className="p-1.5 rounded-lg hover:bg-gray-100 transition-colors"
-            >
-              <ArrowLeft size={20} className="text-gray-500" />
-            </button>
-            <h1 className="text-xl font-bold text-gray-900 tracking-tight">
-              管理后台
-            </h1>
-          </div>
-          <span className="text-sm text-gray-400">AI Coding Arena</span>
-        </div>
-      </header>
-
-      <div className="max-w-7xl mx-auto px-6 py-6">
-        {/* tabs */}
-        <div className="flex gap-1 bg-white rounded-xl p-1 shadow-sm border border-gray-200 mb-8 w-fit">
-          {tabs.map((t) => {
-            const Icon = t.icon;
-            const active = activeTab === t.key;
-            return (
-              <button
-                key={t.key}
-                onClick={() => setActiveTab(t.key)}
-                className={`flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-medium transition-all ${
-                  active
-                    ? 'bg-[#4c6ef5] text-white shadow-sm'
-                    : 'text-gray-500 hover:text-gray-800 hover:bg-gray-50'
-                }`}
-              >
-                <Icon size={16} />
-                {t.label}
-              </button>
-            );
-          })}
-        </div>
-
-        {/* ────────── Tab 1: Dashboard ────────── */}
+    <DashboardLayout sidebarItems={sidebarItemsWithClick}>
+      <div className="px-8 py-6">
+        {/* ────────── Dashboard ────────── */}
         {activeTab === 'dashboard' && (
-          <div className="space-y-8">
+          <div className="space-y-6">
+            <div>
+              <h1 className="text-xl font-bold text-gray-900">数据看板</h1>
+              <p className="text-sm text-gray-500 mt-0.5">
+                系统概览和关键指标
+              </p>
+            </div>
+
             {/* stat cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <StatCard
-                icon={<Users size={22} />}
+                icon={<Users size={20} />}
                 label="候选人总数"
                 value={totalCandidates}
                 color="blue"
               />
               <StatCard
-                icon={<CheckCircle size={22} />}
+                icon={<CheckCircle size={20} />}
                 label="已完成"
                 value={completedCount}
                 color="green"
               />
               <StatCard
-                icon={<TrendingUp size={22} />}
+                icon={<TrendingUp size={20} />}
                 label="平均分"
                 value={avgScore}
                 color="yellow"
               />
               <StatCard
-                icon={<HelpCircle size={22} />}
+                icon={<HelpCircle size={20} />}
                 label="题目数量"
                 value={questionCount}
                 color="purple"
@@ -202,7 +178,7 @@ export default function AdminDashboard() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* score distribution */}
               <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
-                <h3 className="text-base font-semibold text-gray-800 mb-5">
+                <h3 className="text-sm font-semibold text-gray-800 mb-5">
                   成绩分布
                 </h3>
                 <div className="flex items-end gap-3 h-48">
@@ -232,7 +208,7 @@ export default function AdminDashboard() {
 
               {/* dimension averages */}
               <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
-                <h3 className="text-base font-semibold text-gray-800 mb-5">
+                <h3 className="text-sm font-semibold text-gray-800 mb-5">
                   维度平均分对比
                 </h3>
                 <div className="space-y-4">
@@ -246,7 +222,7 @@ export default function AdminDashboard() {
                           className="h-full rounded-full transition-all"
                           style={{
                             width: `${dimensionMockAvg[i]}%`,
-                            backgroundColor: '#4c6ef5',
+                            backgroundColor: '#4f46e5',
                           }}
                         />
                       </div>
@@ -261,115 +237,196 @@ export default function AdminDashboard() {
           </div>
         )}
 
-        {/* ────────── Tab 2: Questions ────────── */}
+        {/* ────────── Questions ────────── */}
         {activeTab === 'questions' && (
-          <div className="space-y-5">
-            {mockQuestions.map((q) => (
-              <div
-                key={q.id}
-                className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 hover:shadow-md transition-shadow"
-              >
-                <div className="flex items-start justify-between gap-4">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-2">
-                      <span
-                        className={`text-xs font-bold px-2.5 py-1 rounded-full ${partColors[q.part]}`}
-                      >
-                        Part {q.part}
-                      </span>
-                      <h3 className="text-base font-semibold text-gray-800">
-                        {q.title}
-                      </h3>
+          <div className="space-y-6">
+            <div>
+              <h1 className="text-xl font-bold text-gray-900">题目管理</h1>
+              <p className="text-sm text-gray-500 mt-0.5">
+                管理面试题目和评分标准
+              </p>
+            </div>
+
+            <div className="space-y-4">
+              {mockQuestions.map((q) => (
+                <div
+                  key={q.id}
+                  className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 hover:shadow-md transition-shadow"
+                >
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-3 mb-2">
+                        <span
+                          className={`text-xs font-bold px-2.5 py-1 rounded-full ${partColors[q.part]}`}
+                        >
+                          Part {q.part}
+                        </span>
+                        <h3 className="text-base font-semibold text-gray-800">
+                          {q.title}
+                        </h3>
+                      </div>
+                      <p className="text-sm text-gray-500 leading-relaxed line-clamp-2">
+                        {q.description}
+                      </p>
                     </div>
-                    <p className="text-sm text-gray-500 leading-relaxed line-clamp-2">
-                      {q.description}
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-4 text-sm text-gray-500 shrink-0">
-                    <span className="flex items-center gap-1">
-                      ⏱ {q.duration} 分钟
-                    </span>
-                    <span className="flex items-center gap-1 font-semibold text-[#4c6ef5]">
-                      {q.maxPoints} 分
-                    </span>
+                    <div className="flex items-center gap-4 text-sm text-gray-500 shrink-0">
+                      <span className="flex items-center gap-1">
+                        ⏱ {q.duration} 分钟
+                      </span>
+                      <span className="flex items-center gap-1 font-semibold text-indigo-600">
+                        {q.maxPoints} 分
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
 
-            <button className="w-full flex items-center justify-center gap-2 py-4 rounded-xl border-2 border-dashed border-gray-300 text-gray-500 hover:border-[#4c6ef5] hover:text-[#4c6ef5] transition-colors text-sm font-medium">
-              <Plus size={18} />
-              添加题目
-            </button>
+              <button className="w-full flex items-center justify-center gap-2 py-4 rounded-xl border-2 border-dashed border-gray-300 text-gray-500 hover:border-indigo-400 hover:text-indigo-600 transition-colors text-sm font-medium">
+                <Plus size={18} />
+                添加题目
+              </button>
+            </div>
           </div>
         )}
 
-        {/* ────────── Tab 3: Scoring Config ────────── */}
+        {/* ────────── Scoring Config ────────── */}
         {activeTab === 'scoring' && (
-          <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-8 max-w-2xl">
-            <h3 className="text-base font-semibold text-gray-800 mb-6">
-              评分维度权重配置
-            </h3>
-
-            <div className="space-y-6">
-              {dimensionLabels.map((dim, i) => (
-                <div key={dim}>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium text-gray-700">
-                      {dim}
-                    </span>
-                    <span className="text-sm font-bold text-[#4c6ef5]">
-                      {weights[i]}%
-                    </span>
-                  </div>
-                  <input
-                    type="range"
-                    min={0}
-                    max={100}
-                    value={weights[i]}
-                    onChange={(e) => updateWeight(i, e.target.value)}
-                    className="w-full h-2 rounded-full appearance-none bg-gray-200 accent-[#4c6ef5] cursor-pointer"
-                  />
-                </div>
-              ))}
+          <div className="space-y-6">
+            <div>
+              <h1 className="text-xl font-bold text-gray-900">评分配置</h1>
+              <p className="text-sm text-gray-500 mt-0.5">
+                配置各评分维度的权重
+              </p>
             </div>
 
-            {/* total indicator */}
-            <div className="mt-8 flex items-center justify-between p-4 rounded-lg bg-gray-50 border border-gray-200">
-              <span className="text-sm text-gray-600">权重总计</span>
-              <span
-                className={`text-lg font-bold ${
-                  totalWeight === 100 ? 'text-green-600' : 'text-red-500'
+            <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-8 max-w-2xl">
+              <h3 className="text-sm font-semibold text-gray-800 mb-6">
+                评分维度权重配置
+              </h3>
+
+              <div className="space-y-6">
+                {dimensionLabels.map((dim, i) => (
+                  <div key={dim}>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm font-medium text-gray-700">
+                        {dim}
+                      </span>
+                      <span className="text-sm font-bold text-indigo-600">
+                        {weights[i]}%
+                      </span>
+                    </div>
+                    <input
+                      type="range"
+                      min={0}
+                      max={100}
+                      value={weights[i]}
+                      onChange={(e) => updateWeight(i, e.target.value)}
+                      className="w-full h-2 rounded-full appearance-none bg-gray-200 accent-indigo-600 cursor-pointer"
+                    />
+                  </div>
+                ))}
+              </div>
+
+              {/* total indicator */}
+              <div className="mt-8 flex items-center justify-between p-4 rounded-lg bg-gray-50 border border-gray-200">
+                <span className="text-sm text-gray-600">权重总计</span>
+                <span
+                  className={`text-lg font-bold ${
+                    totalWeight === 100 ? 'text-green-600' : 'text-red-500'
+                  }`}
+                >
+                  {totalWeight}%
+                  {totalWeight === 100 ? (
+                    <span className="ml-2 text-xs font-normal text-green-500">
+                      ✓ 配置有效
+                    </span>
+                  ) : (
+                    <span className="ml-2 text-xs font-normal text-red-400">
+                      需等于 100%
+                    </span>
+                  )}
+                </span>
+              </div>
+
+              <button
+                disabled={totalWeight !== 100}
+                className={`mt-6 flex items-center justify-center gap-2 w-full py-3 rounded-lg text-sm font-semibold transition-colors ${
+                  totalWeight === 100
+                    ? 'bg-indigo-600 text-white hover:bg-indigo-700'
+                    : 'bg-gray-200 text-gray-400 cursor-not-allowed'
                 }`}
               >
-                {totalWeight}%
-                {totalWeight === 100 ? (
-                  <span className="ml-2 text-xs font-normal text-green-500">
-                    ✓ 配置有效
-                  </span>
-                ) : (
-                  <span className="ml-2 text-xs font-normal text-red-400">
-                    需等于 100%
-                  </span>
-                )}
-              </span>
+                <Save size={16} />
+                保存配置
+              </button>
             </div>
+          </div>
+        )}
 
-            <button
-              disabled={totalWeight !== 100}
-              className={`mt-6 flex items-center justify-center gap-2 w-full py-3 rounded-lg text-sm font-semibold transition-colors ${
-                totalWeight === 100
-                  ? 'bg-[#4c6ef5] text-white hover:bg-[#3b5de7]'
-                  : 'bg-gray-200 text-gray-400 cursor-not-allowed'
-              }`}
-            >
-              <Save size={16} />
-              保存配置
-            </button>
+        {/* ────────── Candidates placeholder ────────── */}
+        {activeTab === 'candidates' && (
+          <div className="space-y-6">
+            <div>
+              <h1 className="text-xl font-bold text-gray-900">候选人</h1>
+              <p className="text-sm text-gray-500 mt-0.5">
+                查看所有候选人信息
+              </p>
+            </div>
+            <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+              <table className="w-full">
+                <thead>
+                  <tr className="text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-100">
+                    <th className="px-6 py-3">姓名</th>
+                    <th className="px-6 py-3">分数</th>
+                    <th className="px-6 py-3">状态</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100">
+                  {mockCandidates.map((c) => (
+                    <tr key={c.id} className="hover:bg-gray-50 transition-colors">
+                      <td className="px-6 py-4 text-sm font-medium text-gray-900">
+                        {c.name}
+                      </td>
+                      <td className="px-6 py-4 text-sm text-gray-700 font-semibold">
+                        {c.score}
+                      </td>
+                      <td className="px-6 py-4">
+                        <span
+                          className={`text-xs font-medium px-3 py-1 rounded-full border ${
+                            c.completed
+                              ? 'bg-emerald-100 text-emerald-700 border-emerald-200'
+                              : 'bg-gray-100 text-gray-600 border-gray-200'
+                          }`}
+                        >
+                          {c.completed ? '已完成' : '进行中'}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {/* ────────── Settings placeholder ────────── */}
+        {activeTab === 'settings' && (
+          <div className="space-y-6">
+            <div>
+              <h1 className="text-xl font-bold text-gray-900">系统设置</h1>
+              <p className="text-sm text-gray-500 mt-0.5">
+                管理系统配置和偏好
+              </p>
+            </div>
+            <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-12 text-center">
+              <Settings size={48} className="mx-auto text-gray-300 mb-3" />
+              <p className="text-gray-500">系统设置功能即将上线</p>
+              <p className="text-gray-400 text-sm mt-1">敬请期待</p>
+            </div>
           </div>
         )}
       </div>
-    </div>
+    </DashboardLayout>
   );
 }
 
@@ -397,9 +454,13 @@ function StatCard({ icon, label, value, color }) {
   const c = colorMap[color] || colorMap.blue;
   return (
     <div
-      className={`rounded-xl border ${c.border} ${c.bg} p-5 flex items-center gap-4`}
+      className={`bg-white rounded-xl border border-gray-200 p-5 flex items-center gap-4 hover:shadow-md transition-shadow`}
     >
-      <div className={`${c.icon}`}>{icon}</div>
+      <div
+        className={`w-10 h-10 rounded-lg flex items-center justify-center ${c.bg} ${c.icon}`}
+      >
+        {icon}
+      </div>
       <div>
         <p className="text-xs text-gray-500 mb-0.5">{label}</p>
         <p className="text-2xl font-bold text-gray-800">{value}</p>

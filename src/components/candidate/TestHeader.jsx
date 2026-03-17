@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Clock, Send, AlertTriangle, ChevronRight } from 'lucide-react';
+import { Clock, Send, AlertTriangle } from 'lucide-react';
 
 export default function TestHeader({ activePart, onPartChange, totalMinutes = 100 }) {
   const [secondsLeft, setSecondsLeft] = useState(totalMinutes * 60);
@@ -20,130 +20,114 @@ export default function TestHeader({ activePart, onPartChange, totalMinutes = 10
 
   const minutes = Math.floor(secondsLeft / 60);
   const seconds = secondsLeft % 60;
-  const isUrgent = secondsLeft < 600; // less than 10 min
-  const isWarning = secondsLeft < 1800; // less than 30 min
+  const isUrgent = secondsLeft < 600;
+  const isWarning = secondsLeft < 1800;
 
   const parts = [
-    { key: 'A', label: 'Part A · 算法' },
-    { key: 'B', label: 'Part B · 开放题' },
-    { key: 'C', label: 'Part C · 审查' },
+    { key: 'A', label: 'Part A \u00b7 \u7b97\u6cd5' },
+    { key: 'B', label: 'Part B \u00b7 \u9879\u76ee' },
+    { key: 'C', label: 'Part C \u00b7 \u5ba1\u67e5' },
   ];
 
   const handleSubmit = () => {
     setShowSubmitConfirm(false);
-    // mock submit
-    alert('测试已提交！感谢你的参与。');
+    alert('\u6d4b\u8bd5\u5df2\u63d0\u4ea4\uff01\u611f\u8c22\u4f60\u7684\u53c2\u4e0e\u3002');
   };
+
+  const timeDisplay = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
 
   return (
     <>
-      <div className="flex items-center justify-between px-4 py-2.5 bg-white border-b border-gray-200 shrink-0">
-        {/* Left: Logo + Test info */}
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
-              <span className="text-white text-sm font-bold">CA</span>
-            </div>
-            <div>
-              <div className="text-sm font-semibold text-gray-800">Coding Arena</div>
-              <div className="text-xs text-gray-400">AI 算法工程师 · 技术评测</div>
-            </div>
-          </div>
+      <div className="flex items-center justify-between px-4 py-2 bg-slate-900 text-white shrink-0 border-b border-slate-700">
+        {/* Left: Logo */}
+        <div className="flex items-center gap-2 select-none">
+          <span className="text-lg">\u26a1</span>
+          <span className="text-sm font-semibold tracking-wide">AI Coding Arena</span>
         </div>
 
         {/* Center: Part tabs */}
-        <div className="flex items-center bg-gray-100 rounded-lg p-0.5">
-          {parts.map((part, idx) => (
+        <div className="flex items-center gap-0">
+          {parts.map((part) => (
             <button
               key={part.key}
               onClick={() => onPartChange(part.key)}
-              className={`flex items-center gap-1 px-4 py-1.5 rounded-md text-sm font-medium transition-all ${
+              className={`px-4 py-2 text-sm font-medium transition-colors border-b-2 ${
                 activePart === part.key
-                  ? 'bg-white text-indigo-600 shadow-sm'
-                  : 'text-gray-500 hover:text-gray-700'
+                  ? 'border-indigo-400 text-white'
+                  : 'border-transparent text-slate-400 hover:text-slate-200'
               }`}
             >
-              <span
-                className={`w-5 h-5 rounded-full text-xs flex items-center justify-center font-semibold ${
-                  activePart === part.key
-                    ? 'bg-indigo-600 text-white'
-                    : 'bg-gray-300 text-white'
-                }`}
-              >
-                {idx + 1}
-              </span>
               {part.label}
             </button>
           ))}
         </div>
 
         {/* Right: Timer + Submit */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
           <div
-            className={`flex items-center gap-2 px-3 py-1.5 rounded-lg ${
+            className={`flex items-center gap-1.5 px-2.5 py-1 rounded ${
               isUrgent
-                ? 'bg-red-50 text-red-600'
+                ? 'text-red-400'
                 : isWarning
-                ? 'bg-amber-50 text-amber-600'
-                : 'bg-gray-50 text-gray-600'
-            }`}
+                ? 'text-amber-400'
+                : 'text-slate-300'
+            } ${isUrgent ? 'animate-pulse' : ''}`}
           >
-            <Clock size={15} className={isUrgent ? 'animate-pulse' : ''} />
+            <Clock size={14} />
             <span className="text-sm font-mono font-semibold tabular-nums">
-              {String(minutes).padStart(2, '0')}:{String(seconds).padStart(2, '0')}
+              {timeDisplay}
             </span>
-            <span className="text-xs opacity-60">剩余</span>
           </div>
 
           <button
             onClick={() => setShowSubmitConfirm(true)}
-            className="flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg transition-colors shadow-sm"
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-white bg-indigo-600 hover:bg-indigo-500 rounded-md transition-colors"
           >
-            <Send size={14} />
-            提交测试
+            <Send size={12} />
+            \u63d0\u4ea4
           </button>
         </div>
       </div>
 
       {/* Submit confirmation modal */}
       {showSubmitConfirm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-          <div className="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-md mx-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
+          <div className="bg-slate-800 rounded-xl shadow-2xl p-6 w-full max-w-md mx-4 border border-slate-700">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center">
-                <AlertTriangle size={20} className="text-amber-600" />
+              <div className="w-10 h-10 rounded-full bg-amber-900/40 flex items-center justify-center">
+                <AlertTriangle size={20} className="text-amber-400" />
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-gray-900">确认提交</h3>
-                <p className="text-sm text-gray-500">提交后将无法修改</p>
+                <h3 className="text-lg font-semibold text-white">\u786e\u8ba4\u63d0\u4ea4</h3>
+                <p className="text-sm text-slate-400">\u63d0\u4ea4\u540e\u5c06\u65e0\u6cd5\u4fee\u6539</p>
               </div>
             </div>
 
-            <div className="bg-gray-50 rounded-lg p-4 mb-5 space-y-2">
+            <div className="bg-slate-900 rounded-lg p-4 mb-5 space-y-2">
               <div className="flex justify-between text-sm">
-                <span className="text-gray-500">剩余时间</span>
-                <span className={`font-mono font-semibold ${isUrgent ? 'text-red-600' : 'text-gray-800'}`}>
-                  {String(minutes).padStart(2, '0')}:{String(seconds).padStart(2, '0')}
+                <span className="text-slate-400">\u5269\u4f59\u65f6\u95f4</span>
+                <span className={`font-mono font-semibold ${isUrgent ? 'text-red-400' : 'text-white'}`}>
+                  {timeDisplay}
                 </span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-gray-500">题目状态</span>
-                <span className="text-gray-800">3 / 3 已作答</span>
+                <span className="text-slate-400">\u9898\u76ee\u72b6\u6001</span>
+                <span className="text-white">3 / 3 \u5df2\u4f5c\u7b54</span>
               </div>
             </div>
 
             <div className="flex gap-3">
               <button
                 onClick={() => setShowSubmitConfirm(false)}
-                className="flex-1 px-4 py-2.5 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
+                className="flex-1 px-4 py-2.5 text-sm font-medium text-slate-300 bg-slate-700 hover:bg-slate-600 rounded-lg transition-colors"
               >
-                继续作答
+                \u7ee7\u7eed\u4f5c\u7b54
               </button>
               <button
                 onClick={handleSubmit}
-                className="flex-1 px-4 py-2.5 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg transition-colors"
+                className="flex-1 px-4 py-2.5 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-500 rounded-lg transition-colors"
               >
-                确认提交
+                \u786e\u8ba4\u63d0\u4ea4
               </button>
             </div>
           </div>

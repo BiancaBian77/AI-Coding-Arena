@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import Editor from '@monaco-editor/react';
-import { Play, ChevronDown, RotateCcw } from 'lucide-react';
+import { Play, ChevronDown, RotateCcw, FileCode, ChevronUp } from 'lucide-react';
 
 const LANGUAGE_OPTIONS = [
   { value: 'python', label: 'Python' },
@@ -10,32 +10,32 @@ const LANGUAGE_OPTIONS = [
 ];
 
 const DEFAULT_CODE = {
-  A: `# Part A: Agent 任务调度算法
-# 请在此实现 schedule_tasks 函数
+  A: `# Part A: Agent \u4efb\u52a1\u8c03\u5ea6\u7b97\u6cd5
+# \u8bf7\u5728\u6b64\u5b9e\u73b0 schedule_tasks \u51fd\u6570
 
 def schedule_tasks(agents, tasks):
     """
-    将任务分配给 Agent
+    \u5c06\u4efb\u52a1\u5206\u914d\u7ed9 Agent
 
     Args:
-        agents: Agent 列表，每个包含 id, capability, current_load, max_load
-        tasks: 任务列表，每个包含 id, difficulty, deadline, priority
+        agents: Agent \u5217\u8868\uff0c\u6bcf\u4e2a\u5305\u542b id, capability, current_load, max_load
+        tasks: \u4efb\u52a1\u5217\u8868\uff0c\u6bcf\u4e2a\u5305\u542b id, difficulty, deadline, priority
 
     Returns:
-        dict: task_id -> agent_id 的映射
+        dict: task_id -> agent_id \u7684\u6620\u5c04
     """
     assignment = {}
 
-    # TODO: 实现你的调度算法
-    # 提示：
-    # 1. 按优先级排序任务
-    # 2. 对每个任务，找到合适的 Agent
-    # 3. 注意检查能力值和负载约束
+    # TODO: \u5b9e\u73b0\u4f60\u7684\u8c03\u5ea6\u7b97\u6cd5
+    # \u63d0\u793a\uff1a
+    # 1. \u6309\u4f18\u5148\u7ea7\u6392\u5e8f\u4efb\u52a1
+    # 2. \u5bf9\u6bcf\u4e2a\u4efb\u52a1\uff0c\u627e\u5230\u5408\u9002\u7684 Agent
+    # 3. \u6ce8\u610f\u68c0\u67e5\u80fd\u529b\u503c\u548c\u8d1f\u8f7d\u7ea6\u675f
 
     return assignment
 
 
-# 测试数据
+# \u6d4b\u8bd5\u6570\u636e
 if __name__ == "__main__":
     agents = [
         {"id": 0, "capability": 8, "current_load": 2, "max_load": 10},
@@ -51,10 +51,10 @@ if __name__ == "__main__":
     ]
 
     result = schedule_tasks(agents, tasks)
-    print("分配结果:", result)
+    print("\u5206\u914d\u7ed3\u679c:", result)
 `,
-  B: `# Part B: 构建 RAG Agent
-# 请在此实现 RAGAgent 类
+  B: `# Part B: \u6784\u5efa RAG Agent
+# \u8bf7\u5728\u6b64\u5b9e\u73b0 RAGAgent \u7c7b
 
 import re
 from collections import Counter
@@ -62,32 +62,32 @@ import math
 
 class RAGAgent:
     def __init__(self, documents):
-        """初始化 RAG Agent，处理并索引文档"""
+        """\u521d\u59cb\u5316 RAG Agent\uff0c\u5904\u7406\u5e76\u7d22\u5f15\u6587\u6863"""
         self.documents = documents
         self.chunks = []
         self.index = {}
 
-        # TODO: 实现文档分块和索引构建
+        # TODO: \u5b9e\u73b0\u6587\u6863\u5206\u5757\u548c\u7d22\u5f15\u6784\u5efa
         self._build_index()
 
     def _build_index(self):
-        """构建文档索引"""
-        # TODO: 实现分块和 TF-IDF/BM25 索引
+        """\u6784\u5efa\u6587\u6863\u7d22\u5f15"""
+        # TODO: \u5b9e\u73b0\u5206\u5757\u548c TF-IDF/BM25 \u7d22\u5f15
         pass
 
     def retrieve(self, query, top_k=3):
-        """检索最相关的 top_k 个文档片段"""
-        # TODO: 实现检索逻辑
+        """\u68c0\u7d22\u6700\u76f8\u5173\u7684 top_k \u4e2a\u6587\u6863\u7247\u6bb5"""
+        # TODO: \u5b9e\u73b0\u68c0\u7d22\u903b\u8f91
         return []
 
     def generate_answer(self, query):
-        """基于检索结果生成回答"""
-        # TODO: 实现答案生成
+        """\u57fa\u4e8e\u68c0\u7d22\u7ed3\u679c\u751f\u6210\u56de\u7b54"""
+        # TODO: \u5b9e\u73b0\u7b54\u6848\u751f\u6210
         return ""
 
     def chat(self, query):
-        """完整的问答流程"""
-        # TODO: 实现完整流程
+        """\u5b8c\u6574\u7684\u95ee\u7b54\u6d41\u7a0b"""
+        # TODO: \u5b9e\u73b0\u5b8c\u6574\u6d41\u7a0b
         return {
             "answer": "",
             "sources": [],
@@ -95,22 +95,22 @@ class RAGAgent:
         }
 
 
-# 测试
+# \u6d4b\u8bd5
 if __name__ == "__main__":
     docs = [
-        "Transformer 模型由 Vaswani 等人在 2017 年提出，基于自注意力机制...",
-        "RAG 技术结合了检索和生成两种范式，能有效减少幻觉...",
-        "向量数据库如 Pinecone、Milvus 用于高效存储和检索嵌入向量...",
+        "Transformer \u6a21\u578b\u7531 Vaswani \u7b49\u4eba\u5728 2017 \u5e74\u63d0\u51fa\uff0c\u57fa\u4e8e\u81ea\u6ce8\u610f\u529b\u673a\u5236...",
+        "RAG \u6280\u672f\u7ed3\u5408\u4e86\u68c0\u7d22\u548c\u751f\u6210\u4e24\u79cd\u8303\u5f0f\uff0c\u80fd\u6709\u6548\u51cf\u5c11\u5e7b\u89c9...",
+        "\u5411\u91cf\u6570\u636e\u5e93\u5982 Pinecone\u3001Milvus \u7528\u4e8e\u9ad8\u6548\u5b58\u50a8\u548c\u68c0\u7d22\u5d4c\u5165\u5411\u91cf...",
     ]
 
     agent = RAGAgent(docs)
-    result = agent.chat("什么是 RAG 技术？")
+    result = agent.chat("\u4ec0\u4e48\u662f RAG \u6280\u672f\uff1f")
     print(result)
 `,
-  C: `# Part C: AI 代码审查
-# 请审查以下 LRU Cache 实现，找出 Bug 并修复
+  C: `# Part C: AI \u4ee3\u7801\u5ba1\u67e5
+# \u8bf7\u5ba1\u67e5\u4ee5\u4e0b LRU Cache \u5b9e\u73b0\uff0c\u627e\u51fa Bug \u5e76\u4fee\u590d
 
-# ===== 原始代码（包含 Bug）=====
+# ===== \u539f\u59cb\u4ee3\u7801\uff08\u5305\u542b Bug\uff09=====
 
 class LRUCache:
     def __init__(self, capacity):
@@ -159,32 +159,33 @@ class LRUCache:
             del self.cache[old]
 
 
-# ===== 请在下方写出你的分析和修复后的代码 =====
+# ===== \u8bf7\u5728\u4e0b\u65b9\u5199\u51fa\u4f60\u7684\u5206\u6790\u548c\u4fee\u590d\u540e\u7684\u4ee3\u7801 =====
 
 """
-Bug 分析：
+Bug \u5206\u6790\uff1a
 1.
 2.
 3.
 4.
 5.
 
-性能分析：
-- get() 时间复杂度：
-- put() 时间复杂度：
-- 优化建议：
+\u6027\u80fd\u5206\u6790\uff1a
+- get() \u65f6\u95f4\u590d\u6742\u5ea6\uff1a
+- put() \u65f6\u95f4\u590d\u6742\u5ea6\uff1a
+- \u4f18\u5316\u5efa\u8bae\uff1a
 """
 
-# 修复后的代码
+# \u4fee\u590d\u540e\u7684\u4ee3\u7801
 
-# 单元测试
+# \u5355\u5143\u6d4b\u8bd5
 `,
 };
 
-export default function CodeEditor({ activePart }) {
+export default function CodeEditor({ activePart, onLanguageChange }) {
   const [language, setLanguage] = useState('python');
   const [showLangMenu, setShowLangMenu] = useState(false);
   const [output, setOutput] = useState('');
+  const [showOutput, setShowOutput] = useState(true);
   const [isRunning, setIsRunning] = useState(false);
   const [codes, setCodes] = useState({ ...DEFAULT_CODE });
   const editorRef = useRef(null);
@@ -197,18 +198,26 @@ export default function CodeEditor({ activePart }) {
     setCodes((prev) => ({ ...prev, [activePart]: value }));
   };
 
+  const handleLanguageChange = (lang) => {
+    setLanguage(lang);
+    setShowLangMenu(false);
+    const label = LANGUAGE_OPTIONS.find((l) => l.value === lang)?.label || lang;
+    onLanguageChange?.(label);
+  };
+
   const handleRun = () => {
     setIsRunning(true);
-    setOutput('正在运行...\n');
+    setOutput('\u6b63\u5728\u8fd0\u884c...\n');
+    setShowOutput(true);
     setTimeout(() => {
       setOutput(
         `$ python solution.py\n\n` +
-          `运行完成 ✓\n` +
-          `执行时间: 0.023s\n` +
-          `内存使用: 12.4 MB\n\n` +
-          `> 测试用例 1: 通过\n` +
-          `> 测试用例 2: 通过\n` +
-          `> 测试用例 3: 等待提交后评测\n`
+          `\u8fd0\u884c\u5b8c\u6210 \u2713\n` +
+          `\u6267\u884c\u65f6\u95f4: 0.023s\n` +
+          `\u5185\u5b58\u4f7f\u7528: 12.4 MB\n\n` +
+          `> \u6d4b\u8bd5\u7528\u4f8b 1: \u901a\u8fc7\n` +
+          `> \u6d4b\u8bd5\u7528\u4f8b 2: \u901a\u8fc7\n` +
+          `> \u6d4b\u8bd5\u7528\u4f8b 3: \u7b49\u5f85\u63d0\u4ea4\u540e\u8bc4\u6d4b\n`
       );
       setIsRunning(false);
     }, 1500);
@@ -219,30 +228,33 @@ export default function CodeEditor({ activePart }) {
   };
 
   return (
-    <div className="flex flex-col h-full bg-white">
+    <div className="flex flex-col h-full bg-slate-900">
       {/* Toolbar */}
-      <div className="flex items-center justify-between px-3 py-2 border-b border-gray-200 bg-gray-50 shrink-0">
-        <div className="flex items-center gap-2">
+      <div className="flex items-center justify-between px-3 py-1.5 bg-slate-800 border-b border-slate-700 shrink-0">
+        <div className="flex items-center gap-3">
+          {/* File tab */}
+          <div className="flex items-center gap-1.5 px-3 py-1 bg-slate-900 rounded text-sm text-white border border-slate-600">
+            <FileCode size={14} className="text-yellow-400" />
+            <span>solution.py</span>
+          </div>
+
           {/* Language selector */}
           <div className="relative">
             <button
               onClick={() => setShowLangMenu(!showLangMenu)}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-sm bg-white border border-gray-200 rounded-md hover:bg-gray-50 text-gray-700"
+              className="flex items-center gap-1.5 px-2.5 py-1 text-xs bg-slate-700 border border-slate-600 rounded hover:bg-slate-600 text-slate-300 transition-colors"
             >
               {LANGUAGE_OPTIONS.find((l) => l.value === language)?.label}
-              <ChevronDown size={14} />
+              <ChevronDown size={12} />
             </button>
             {showLangMenu && (
-              <div className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-md shadow-lg z-10">
+              <div className="absolute top-full left-0 mt-1 bg-slate-700 border border-slate-600 rounded shadow-xl z-10 min-w-[120px]">
                 {LANGUAGE_OPTIONS.map((lang) => (
                   <button
                     key={lang.value}
-                    onClick={() => {
-                      setLanguage(lang.value);
-                      setShowLangMenu(false);
-                    }}
-                    className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-50 ${
-                      language === lang.value ? 'text-indigo-600 bg-indigo-50' : 'text-gray-700'
+                    onClick={() => handleLanguageChange(lang.value)}
+                    className={`block w-full text-left px-3 py-1.5 text-xs hover:bg-slate-600 transition-colors ${
+                      language === lang.value ? 'text-indigo-400 bg-slate-600' : 'text-slate-300'
                     }`}
                   >
                     {lang.label}
@@ -251,24 +263,23 @@ export default function CodeEditor({ activePart }) {
               </div>
             )}
           </div>
-          <span className="text-xs text-gray-400">solution.py</span>
         </div>
 
         <div className="flex items-center gap-2">
           <button
             onClick={handleReset}
-            className="flex items-center gap-1 px-2.5 py-1.5 text-xs text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded"
+            className="flex items-center gap-1 px-2 py-1 text-xs text-slate-400 hover:text-slate-200 hover:bg-slate-700 rounded transition-colors"
           >
-            <RotateCcw size={13} />
-            重置
+            <RotateCcw size={12} />
+            \u91cd\u7f6e
           </button>
           <button
             onClick={handleRun}
             disabled={isRunning}
-            className="flex items-center gap-1.5 px-3.5 py-1.5 text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 rounded-md disabled:opacity-50 transition-colors"
+            className="flex items-center gap-1.5 px-3 py-1 text-xs font-medium text-white bg-emerald-600 hover:bg-emerald-500 rounded disabled:opacity-50 transition-colors"
           >
-            <Play size={14} />
-            {isRunning ? '运行中...' : '运行'}
+            <Play size={12} />
+            {isRunning ? '\u8fd0\u884c\u4e2d...' : '\u8fd0\u884c'}
           </button>
         </div>
       </div>
@@ -281,7 +292,7 @@ export default function CodeEditor({ activePart }) {
           value={codes[activePart]}
           onChange={handleCodeChange}
           onMount={handleEditorMount}
-          theme="vs-light"
+          theme="vs-dark"
           options={{
             fontSize: 14,
             lineHeight: 22,
@@ -299,22 +310,35 @@ export default function CodeEditor({ activePart }) {
       </div>
 
       {/* Output panel */}
-      {output && (
-        <div className="border-t border-gray-200 bg-gray-900 shrink-0">
-          <div className="flex items-center justify-between px-3 py-1.5 border-b border-gray-700">
-            <span className="text-xs text-gray-400 font-medium">输出</span>
+      <div className="border-t border-slate-700 bg-slate-950 shrink-0">
+        <div className="flex items-center justify-between px-3 py-1 border-b border-slate-800">
+          <button
+            onClick={() => setShowOutput(!showOutput)}
+            className="flex items-center gap-1 text-xs text-slate-400 hover:text-slate-200 font-medium transition-colors"
+          >
+            {showOutput ? <ChevronDown size={12} /> : <ChevronUp size={12} />}
+            \u8f93\u51fa
+          </button>
+          {output && (
             <button
               onClick={() => setOutput('')}
-              className="text-xs text-gray-500 hover:text-gray-300"
+              className="text-xs text-slate-500 hover:text-slate-300 transition-colors"
             >
-              清除
+              \u6e05\u9664
             </button>
-          </div>
-          <pre className="p-3 text-xs text-gray-200 font-mono max-h-40 overflow-y-auto leading-relaxed whitespace-pre-wrap">
+          )}
+        </div>
+        {showOutput && output && (
+          <pre className="p-3 text-xs text-emerald-300 font-mono max-h-40 overflow-y-auto leading-relaxed whitespace-pre-wrap">
             {output}
           </pre>
-        </div>
-      )}
+        )}
+        {showOutput && !output && (
+          <div className="p-3 text-xs text-slate-600 font-mono">
+            \u70b9\u51fb "\u8fd0\u884c" \u6267\u884c\u4ee3\u7801...
+          </div>
+        )}
+      </div>
     </div>
   );
 }

@@ -1,107 +1,393 @@
-import { useNavigate } from 'react-router-dom';
-import { UserCheck, Monitor, Settings, Zap } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import {
+  Zap,
+  Bot,
+  BarChart3,
+  Code2,
+  Brain,
+  Layers,
+  Globe,
+  ArrowRight,
+  CheckCircle,
+  ChevronRight,
+} from 'lucide-react';
 
-const dimensions = [
-  { label: '独立Coding', pct: 20, desc: '无 AI 辅助的基础编码能力' },
-  { label: 'AI提效', pct: 25, desc: '利用 AI 工具提升开发效率' },
-  { label: 'AI批判', pct: 25, desc: '对 AI 输出的审查与纠错能力' },
-  { label: '端到端', pct: 20, desc: '从需求到部署的全链路交付' },
-  { label: '跨领域', pct: 10, desc: '前后端、DevOps 等知识广度' },
+const features = [
+  {
+    icon: Bot,
+    title: 'AI 原生评测',
+    desc: '允许使用 AI，评估真实的人机协作能力，告别传统 LeetCode 式面试',
+    color: 'bg-blue-50 text-blue-600',
+  },
+  {
+    icon: BarChart3,
+    title: '多维度能力画像',
+    desc: '五维评分体系，360° 能力画像，全面了解候选人技术水平',
+    color: 'bg-purple-50 text-purple-600',
+  },
+  {
+    icon: Zap,
+    title: '智能面试提效',
+    desc: 'AI 自动分析评分，减少 80% 面试时间，让技术招聘更高效',
+    color: 'bg-amber-50 text-amber-600',
+  },
 ];
 
-const links = [
+const steps = [
+  { num: '1', title: '创建评测', desc: '选择题目模板或自定义评测方案' },
+  { num: '2', title: '候选人作答', desc: '在 AI 辅助的 IDE 中完成编码任务' },
+  { num: '3', title: '智能分析', desc: 'AI 自动生成多维评分报告' },
+];
+
+const dimensions = [
+  { icon: Code2, label: '独立 Coding', desc: '无 AI 辅助的基础编码能力', score: 85, color: 'bg-indigo-500' },
+  { icon: Bot, label: 'AI 提效', desc: '利用 AI 工具提升开发效率', score: 92, color: 'bg-blue-500' },
+  { icon: Brain, label: 'AI 批判', desc: '对 AI 输出的审查与纠错能力', score: 78, color: 'bg-violet-500' },
+  { icon: Layers, label: '端到端交付', desc: '从需求到部署的全链路交付', score: 88, color: 'bg-emerald-500' },
+  { icon: Globe, label: '跨领域能力', desc: '前后端、DevOps 等知识广度', score: 72, color: 'bg-amber-500' },
+];
+
+const footerCols = [
   {
-    to: '/login',
-    icon: UserCheck,
-    title: '候选人端',
-    desc: '参加编程评测，完成三部分题目',
-    color: 'bg-blue-50 text-blue-600 border-blue-100',
-    hover: 'hover:border-blue-300',
+    title: '产品',
+    links: ['技术评测', 'AI 面试助手', '能力报告', 'API 接口'],
   },
   {
-    to: '/interviewer',
-    icon: Monitor,
-    title: '面试官端',
-    desc: '查看候选人成绩与过程回放',
-    color: 'bg-emerald-50 text-emerald-600 border-emerald-100',
-    hover: 'hover:border-emerald-300',
+    title: '解决方案',
+    links: ['校园招聘', '社会招聘', '内部考核', '培训认证'],
   },
   {
-    to: '/admin',
-    icon: Settings,
-    title: '管理端',
-    desc: '数据看板、题目管理、评分配置',
-    color: 'bg-purple-50 text-purple-600 border-purple-100',
-    hover: 'hover:border-purple-300',
+    title: '资源',
+    links: ['帮助中心', '开发文档', '更新日志', '博客'],
+  },
+  {
+    title: '关于',
+    links: ['关于我们', '联系我们', '隐私政策', '服务条款'],
   },
 ];
 
 export default function Home() {
-  const navigate = useNavigate();
-
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
-      {/* hero */}
-      <section className="flex-1 flex flex-col items-center justify-center px-6 pt-20 pb-10">
-        <div className="flex items-center gap-2 mb-3">
-          <Zap size={28} className="text-[#4c6ef5]" />
-          <h1 className="text-4xl font-extrabold text-gray-900 tracking-tight">
-            AI Coding Arena
+    <div className="min-h-screen bg-white">
+      {/* ── Sticky Navbar ── */}
+      <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-lg border-b border-gray-100">
+        <div className="max-w-7xl mx-auto flex items-center justify-between px-6 h-16">
+          {/* Logo */}
+          <Link to="/" className="flex items-center gap-2 shrink-0">
+            <span className="text-2xl">⚡</span>
+            <span className="text-lg font-bold text-gray-900 tracking-tight">
+              AI Coding Arena
+            </span>
+          </Link>
+
+          {/* Center links */}
+          <div className="hidden md:flex items-center gap-8">
+            <a href="#features" className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">
+              产品介绍
+            </a>
+            <a href="#dimensions" className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">
+              评测体系
+            </a>
+          </div>
+
+          {/* Right buttons */}
+          <div className="flex items-center gap-3">
+            <Link
+              to="/login"
+              className="hidden sm:inline-flex items-center px-4 py-2 text-sm font-medium text-indigo-600 border border-indigo-200 rounded-lg hover:bg-indigo-50 transition-all"
+            >
+              候选人入口
+            </Link>
+            <Link
+              to="/interviewer"
+              className="inline-flex items-center px-4 py-2 text-sm font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-all shadow-sm"
+            >
+              企业登录
+            </Link>
+          </div>
+        </div>
+      </nav>
+
+      {/* ── Hero Section ── */}
+      <section className="relative overflow-hidden bg-gradient-to-b from-indigo-50 to-white">
+        <div className="max-w-5xl mx-auto px-6 pt-20 pb-24 text-center">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-indigo-100 text-indigo-700 rounded-full text-sm font-medium mb-6">
+            <Zap size={14} />
+            新一代技术评测平台
+          </div>
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-gray-900 tracking-tight leading-tight mb-6">
+            AI 时代的
+            <span className="text-indigo-600">技术评测平台</span>
           </h1>
-        </div>
-        <p className="text-lg text-gray-500 mb-12">
-          智评台 · AI时代技术评测平台
-        </p>
+          <p className="text-lg sm:text-xl text-gray-500 max-w-2xl mx-auto mb-10 leading-relaxed">
+            五维 AI 原生评测体系，真实衡量候选人的编码能力与 AI 协作水平。
+            <br className="hidden sm:block" />
+            告别传统刷题面试，拥抱智能化技术招聘。
+          </p>
 
-        {/* entry cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-3xl w-full mb-16">
-          {links.map((l) => {
-            const Icon = l.icon;
-            return (
-              <button
-                key={l.to}
-                onClick={() => navigate(l.to)}
-                className={`rounded-xl border-2 p-6 text-left transition-all shadow-sm hover:shadow-md ${l.color} ${l.hover}`}
-              >
-                <Icon size={28} className="mb-3" />
-                <h2 className="text-base font-bold text-gray-800 mb-1">
-                  {l.title}
-                </h2>
-                <p className="text-sm text-gray-500 leading-relaxed">
-                  {l.desc}
-                </p>
-              </button>
-            );
-          })}
-        </div>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
+            <Link
+              to="/login"
+              className="btn-primary text-base px-8 py-3.5"
+            >
+              开始体验
+              <ArrowRight size={18} />
+            </Link>
+            <Link
+              to="/interviewer"
+              className="btn-secondary text-base px-8 py-3.5"
+            >
+              面试官入口
+            </Link>
+          </div>
 
-        {/* dimensions */}
-        <div className="max-w-2xl w-full">
-          <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider text-center mb-5">
-            五维评测体系
-          </h3>
-          <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
-            {dimensions.map((d) => (
-              <div
-                key={d.label}
-                className="bg-white rounded-xl border border-gray-200 p-4 text-center shadow-sm"
-              >
-                <p className="text-lg font-bold text-[#4c6ef5]">{d.pct}%</p>
-                <p className="text-sm font-semibold text-gray-700 mt-1">
-                  {d.label}
-                </p>
-                <p className="text-xs text-gray-400 mt-1 leading-snug">
-                  {d.desc}
-                </p>
+          {/* IDE Mockup */}
+          <div className="max-w-4xl mx-auto">
+            <div className="bg-gray-900 rounded-2xl p-1.5 shadow-2xl shadow-gray-400/20">
+              {/* Title bar */}
+              <div className="flex items-center gap-2 px-4 py-2.5">
+                <div className="flex gap-1.5">
+                  <div className="w-3 h-3 rounded-full bg-red-500" />
+                  <div className="w-3 h-3 rounded-full bg-yellow-500" />
+                  <div className="w-3 h-3 rounded-full bg-green-500" />
+                </div>
+                <div className="flex-1 text-center text-xs text-gray-500 font-mono">
+                  AI Coding Arena — 技术评测
+                </div>
+              </div>
+              {/* 3 panes */}
+              <div className="flex gap-1 px-1 pb-1">
+                <div className="flex-[2] bg-gray-800 rounded-lg h-48 p-4">
+                  <div className="text-xs text-gray-500 font-mono mb-3">题目描述</div>
+                  <div className="space-y-2">
+                    <div className="h-2 bg-gray-700 rounded w-3/4" />
+                    <div className="h-2 bg-gray-700 rounded w-full" />
+                    <div className="h-2 bg-gray-700 rounded w-5/6" />
+                    <div className="h-2 bg-gray-700 rounded w-2/3" />
+                  </div>
+                </div>
+                <div className="flex-[3] bg-gray-800 rounded-lg h-48 p-4">
+                  <div className="text-xs text-gray-500 font-mono mb-3">代码编辑器</div>
+                  <div className="space-y-2">
+                    <div className="flex gap-2">
+                      <div className="h-2 bg-purple-500/30 rounded w-12" />
+                      <div className="h-2 bg-blue-500/30 rounded w-20" />
+                    </div>
+                    <div className="flex gap-2 pl-4">
+                      <div className="h-2 bg-green-500/30 rounded w-16" />
+                      <div className="h-2 bg-gray-700 rounded w-24" />
+                    </div>
+                    <div className="flex gap-2 pl-4">
+                      <div className="h-2 bg-yellow-500/30 rounded w-10" />
+                      <div className="h-2 bg-gray-700 rounded w-32" />
+                    </div>
+                    <div className="flex gap-2 pl-4">
+                      <div className="h-2 bg-gray-700 rounded w-20" />
+                    </div>
+                    <div className="flex gap-2">
+                      <div className="h-2 bg-purple-500/30 rounded w-8" />
+                    </div>
+                  </div>
+                </div>
+                <div className="flex-[2] bg-gray-800 rounded-lg h-48 p-4">
+                  <div className="text-xs text-gray-500 font-mono mb-3">AI 助手</div>
+                  <div className="space-y-2">
+                    <div className="h-6 bg-indigo-500/20 rounded-lg w-full" />
+                    <div className="h-2 bg-gray-700 rounded w-5/6 mt-3" />
+                    <div className="h-2 bg-gray-700 rounded w-full" />
+                    <div className="h-2 bg-gray-700 rounded w-4/5" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Stats Bar ── */}
+      <section className="border-y border-gray-100 bg-white">
+        <div className="max-w-5xl mx-auto px-6 py-8 flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-12 text-center">
+          <div>
+            <div className="text-2xl font-bold text-gray-900">500+</div>
+            <div className="text-sm text-gray-500">企业信赖</div>
+          </div>
+          <div className="hidden sm:block w-px h-8 bg-gray-200" />
+          <div>
+            <div className="text-2xl font-bold text-gray-900">10,000+</div>
+            <div className="text-sm text-gray-500">候选人评测</div>
+          </div>
+          <div className="hidden sm:block w-px h-8 bg-gray-200" />
+          <div>
+            <div className="text-2xl font-bold text-gray-900">80%</div>
+            <div className="text-sm text-gray-500">节省评估时间</div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Feature Cards ── */}
+      <section id="features" className="py-24 bg-white">
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+              为什么选择 AI Coding Arena
+            </h2>
+            <p className="text-lg text-gray-500 max-w-2xl mx-auto">
+              我们重新定义了技术评测，让 AI 时代的人才选拔更科学、更高效
+            </p>
+          </div>
+          <div className="grid md:grid-cols-3 gap-8">
+            {features.map((f) => {
+              const Icon = f.icon;
+              return (
+                <div
+                  key={f.title}
+                  className="card p-8 hover:translate-y-[-2px] transition-all"
+                >
+                  <div
+                    className={`w-12 h-12 rounded-xl ${f.color} flex items-center justify-center mb-5`}
+                  >
+                    <Icon size={24} />
+                  </div>
+                  <h3 className="text-lg font-bold text-gray-900 mb-2">
+                    {f.title}
+                  </h3>
+                  <p className="text-gray-500 leading-relaxed">{f.desc}</p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* ── How it Works ── */}
+      <section className="py-24 bg-gray-50">
+        <div className="max-w-5xl mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+              三步开启智能评测
+            </h2>
+            <p className="text-lg text-gray-500">简单流程，快速上手</p>
+          </div>
+          <div className="grid md:grid-cols-3 gap-8 relative">
+            {/* Connecting lines */}
+            <div className="hidden md:block absolute top-12 left-1/3 right-1/3 h-0.5 bg-gradient-to-r from-indigo-200 via-indigo-300 to-indigo-200" />
+            {steps.map((s) => (
+              <div key={s.num} className="text-center relative">
+                <div className="w-24 h-24 rounded-full bg-white border-2 border-indigo-200 flex items-center justify-center mx-auto mb-6 shadow-card relative z-10">
+                  <span className="text-3xl font-bold text-indigo-600">
+                    {s.num}
+                  </span>
+                </div>
+                <h3 className="text-lg font-bold text-gray-900 mb-2">
+                  {s.title}
+                </h3>
+                <p className="text-gray-500">{s.desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* footer */}
-      <footer className="text-center text-xs text-gray-400 py-6">
-        © 2026 AI Coding Arena — 智评台
+      {/* ── 5-Dimension Showcase ── */}
+      <section id="dimensions" className="py-24 bg-white">
+        <div className="max-w-4xl mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+              五维能力评估体系
+            </h2>
+            <p className="text-lg text-gray-500 max-w-2xl mx-auto">
+              全方位评估候选人在 AI 时代的核心技术能力
+            </p>
+          </div>
+          <div className="space-y-6">
+            {dimensions.map((d) => {
+              const Icon = d.icon;
+              return (
+                <div key={d.label} className="card p-6">
+                  <div className="flex items-center gap-4 mb-3">
+                    <div className="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center text-gray-600">
+                      <Icon size={20} />
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between">
+                        <h4 className="font-semibold text-gray-900">
+                          {d.label}
+                        </h4>
+                        <span className="text-sm font-bold text-gray-900">
+                          {d.score}
+                          <span className="text-gray-400 font-normal">
+                            /100
+                          </span>
+                        </span>
+                      </div>
+                      <p className="text-sm text-gray-500 mt-0.5">{d.desc}</p>
+                    </div>
+                  </div>
+                  <div className="h-2.5 bg-gray-100 rounded-full overflow-hidden">
+                    <div
+                      className={`h-full ${d.color} rounded-full transition-all duration-700`}
+                      style={{ width: `${d.score}%` }}
+                    />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* ── CTA Section ── */}
+      <section className="py-24 bg-gradient-to-br from-indigo-600 to-indigo-800">
+        <div className="max-w-3xl mx-auto px-6 text-center">
+          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+            Ready to transform your technical hiring?
+          </h2>
+          <p className="text-lg text-indigo-200 mb-10">
+            加入 500+ 企业，开启 AI 时代的智能技术评测
+          </p>
+          <Link
+            to="/login"
+            className="inline-flex items-center gap-2 px-8 py-4 text-base font-semibold text-indigo-600 bg-white rounded-xl hover:bg-indigo-50 transition-all shadow-lg"
+          >
+            免费开始使用
+            <ChevronRight size={18} />
+          </Link>
+        </div>
+      </section>
+
+      {/* ── Footer ── */}
+      <footer className="bg-gray-900 text-gray-400">
+        <div className="max-w-6xl mx-auto px-6 py-16">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            {footerCols.map((col) => (
+              <div key={col.title}>
+                <h4 className="text-sm font-semibold text-white mb-4">
+                  {col.title}
+                </h4>
+                <ul className="space-y-2.5">
+                  {col.links.map((link) => (
+                    <li key={link}>
+                      <span className="text-sm hover:text-white transition-colors cursor-pointer">
+                        {link}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+          <div className="border-t border-gray-800 mt-12 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-2">
+              <span className="text-lg">⚡</span>
+              <span className="text-sm font-semibold text-white">
+                AI Coding Arena
+              </span>
+            </div>
+            <p className="text-xs text-gray-500">
+              © 2026 AI Coding Arena. All rights reserved.
+            </p>
+          </div>
+        </div>
       </footer>
     </div>
   );
