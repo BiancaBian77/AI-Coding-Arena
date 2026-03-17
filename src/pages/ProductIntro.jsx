@@ -4,26 +4,12 @@ import {
   ArrowRight, CheckCircle, Monitor, MessageSquare, Lock,
   Sparkles, Users, Clock, FileText,
 } from 'lucide-react';
+import Navbar from '../components/shared/Navbar';
 
 export default function ProductIntro() {
   return (
     <div className="min-h-screen bg-white">
-      {/* Navbar */}
-      <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-lg border-b border-gray-100">
-        <div className="max-w-7xl mx-auto flex items-center justify-between px-6 h-16">
-          <Link to="/" className="flex items-center gap-2">
-            <span className="text-2xl">⚡</span>
-            <span className="text-lg font-bold text-gray-900">AI Coding Arena</span>
-          </Link>
-          <div className="hidden md:flex items-center gap-8">
-            <span className="text-sm font-medium text-indigo-600">产品介绍</span>
-            <Link to="/assessment" className="text-sm font-medium text-gray-600 hover:text-gray-900">评测体系</Link>
-          </div>
-          <Link to="/login" className="px-4 py-2 text-sm font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 shadow-sm">
-            企业登录
-          </Link>
-        </div>
-      </nav>
+      <Navbar activePage="product" />
 
       {/* Hero */}
       <section className="bg-gradient-to-b from-indigo-50 to-white pt-20 pb-16">

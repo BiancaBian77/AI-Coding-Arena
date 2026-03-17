@@ -10,6 +10,7 @@ import {
   ArrowRight,
   CheckCircle,
 } from 'lucide-react';
+import Navbar from '../components/shared/Navbar';
 
 const features = [
   {
@@ -50,36 +51,7 @@ const dimensions = [
 export default function Home() {
   return (
     <div className="min-h-screen bg-white">
-      {/* ── Sticky Navbar ── */}
-      <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-lg border-b border-gray-100">
-        <div className="max-w-7xl mx-auto flex items-center justify-between px-6 h-16">
-          {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 shrink-0">
-            <span className="text-2xl">⚡</span>
-            <span className="text-lg font-bold text-gray-900 tracking-tight">
-              AI Coding Arena
-            </span>
-          </Link>
-
-          {/* Center links */}
-          <div className="hidden md:flex items-center gap-10">
-            <Link to="/product" className="text-base font-medium text-gray-600 hover:text-indigo-600 transition-colors">
-              产品介绍
-            </Link>
-            <Link to="/assessment" className="text-base font-medium text-gray-600 hover:text-indigo-600 transition-colors">
-              评测体系
-            </Link>
-          </div>
-
-          {/* Right button */}
-          <Link
-            to="/login"
-            className="inline-flex items-center px-5 py-2.5 text-sm font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-all shadow-sm"
-          >
-            企业登录
-          </Link>
-        </div>
-      </nav>
+      <Navbar />
 
       {/* ── Hero Section ── */}
       <section className="relative overflow-hidden bg-gradient-to-b from-indigo-50 to-white">

@@ -3,6 +3,7 @@ import {
   Code2, Bot, Brain, Layers, Globe, CheckCircle, ArrowRight,
   Lock, Sparkles, AlertTriangle, BarChart3, Target,
 } from 'lucide-react';
+import Navbar from '../components/shared/Navbar';
 
 const dimensions = [
   {
@@ -53,22 +54,7 @@ const colorMap = {
 export default function AssessmentSystem() {
   return (
     <div className="min-h-screen bg-white">
-      {/* Navbar */}
-      <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-lg border-b border-gray-100">
-        <div className="max-w-7xl mx-auto flex items-center justify-between px-6 h-16">
-          <Link to="/" className="flex items-center gap-2">
-            <span className="text-2xl">⚡</span>
-            <span className="text-lg font-bold text-gray-900">AI Coding Arena</span>
-          </Link>
-          <div className="hidden md:flex items-center gap-8">
-            <Link to="/product" className="text-sm font-medium text-gray-600 hover:text-gray-900">产品介绍</Link>
-            <span className="text-sm font-medium text-indigo-600">评测体系</span>
-          </div>
-          <Link to="/login" className="px-4 py-2 text-sm font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 shadow-sm">
-            企业登录
-          </Link>
-        </div>
-      </nav>
+      <Navbar activePage="assessment" />
 
       {/* Hero */}
       <section className="bg-gradient-to-b from-indigo-50 to-white pt-20 pb-16">
