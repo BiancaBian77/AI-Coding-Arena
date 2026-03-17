@@ -15,14 +15,9 @@ import {
   UserPlus,
 } from 'lucide-react';
 import DashboardLayout from '../components/layout/DashboardLayout';
+import { getInterviewerSidebar } from '../config/sidebarConfig';
 
-const sidebarItems = [
-  { icon: LayoutDashboard, label: '总览', path: '/interviewer' },
-  { icon: Briefcase, label: '岗位管理', path: '/interviewer/positions', active: true },
-  { icon: Users, label: '候选人', path: '/interviewer' },
-  { icon: BarChart3, label: '分析报告', path: '/interviewer' },
-  { icon: Settings, label: '设置', path: '/interviewer' },
-];
+const sidebarItems = getInterviewerSidebar('/interviewer/positions');
 
 const generateCode = () => {
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';

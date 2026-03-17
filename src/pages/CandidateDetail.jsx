@@ -17,6 +17,7 @@ import {
   ChevronRight,
 } from 'lucide-react';
 import DashboardLayout from '../components/layout/DashboardLayout';
+import { getInterviewerSidebar } from '../config/sidebarConfig';
 import ScoreCard from '../components/interviewer/ScoreCard';
 import ProcessReplay from '../components/interviewer/ProcessReplay';
 import mockCandidates, {
@@ -27,12 +28,7 @@ import mockCandidates, {
   generateScoreReasoning,
 } from '../data/mockCandidates';
 
-const sidebarItems = [
-  { icon: LayoutDashboard, label: '总览', path: '/interviewer', active: false },
-  { icon: Users, label: '候选人', path: '/interviewer', active: true },
-  { icon: BarChart3, label: '分析报告', path: '/interviewer', active: false },
-  { icon: Settings, label: '设置', path: '/interviewer', active: false },
-];
+const sidebarItems = getInterviewerSidebar('/interviewer');
 
 const tabDefs = [
   { key: 'scores', label: '评分概览' },
