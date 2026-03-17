@@ -2,14 +2,14 @@ import { useState } from 'react';
 import { FileText, Folder, Eye } from 'lucide-react';
 
 const PART_META = {
-  A: { difficulty: '\u4e2d\u7b49', duration: '40 min', maxScore: 40 },
-  B: { difficulty: '\u56f0\u96be', duration: '40 min', maxScore: 35 },
-  C: { difficulty: '\u4e2d\u7b49', duration: '20 min', maxScore: 25 },
+  A: { difficulty: '中等', duration: '40 min', maxScore: 40, tag: '独立编码 · 禁用AI' },
+  B: { difficulty: '困难', duration: '40 min', maxScore: 35, tag: 'AI协作开发 · 可选模型' },
+  C: { difficulty: '中等', duration: '20 min', maxScore: 25, tag: 'AI代码审查 · AI可能出错' },
 };
 
 const PROBLEMS = {
   A: {
-    title: 'Part A: Agent \u4efb\u52a1\u8c03\u5ea6\u7b97\u6cd5',
+    title: 'Part A: 独立编码 — Agent 任务调度算法',
     content: `## \u9898\u76ee\u63cf\u8ff0
 
 \u4f60\u6b63\u5728\u4e3a\u4e00\u4e2a\u591a Agent \u7cfb\u7edf\u8bbe\u8ba1\u4efb\u52a1\u8c03\u5ea6\u5668\u3002\u7cfb\u7edf\u4e2d\u6709 \`n\` \u4e2a Agent\uff0c\u6bcf\u4e2a Agent \u6709\u4e0d\u540c\u7684\u80fd\u529b\u503c\u548c\u5f53\u524d\u8d1f\u8f7d\u3002\u73b0\u5728\u6709 \`m\` \u4e2a\u4efb\u52a1\u9700\u8981\u5206\u914d\u3002
@@ -64,7 +64,7 @@ tasks = [
 - \u4ee3\u7801\u8d28\u91cf\uff0820%\uff09\uff1a\u53ef\u8bfb\u6027\u3001\u6ce8\u91ca\u3001\u8fb9\u754c\u5904\u7406`,
   },
   B: {
-    title: 'Part B: \u6784\u5efa RAG Agent',
+    title: 'Part B: AI 协作开发 — 构建 RAG Agent',
     content: `## \u9898\u76ee\u63cf\u8ff0
 
 \u8bf7\u8bbe\u8ba1\u5e76\u5b9e\u73b0\u4e00\u4e2a\u57fa\u4e8e RAG\uff08Retrieval-Augmented Generation\uff09\u7684\u95ee\u7b54 Agent\u3002
@@ -123,7 +123,7 @@ documents = [
 - \u521b\u65b0\u6027\uff0820%\uff09\uff1a\u989d\u5916\u529f\u80fd\uff08\u5982\u5bf9\u8bdd\u5386\u53f2\u3001\u91cd\u6392\u5e8f\uff09`,
   },
   C: {
-    title: 'Part C: AI \u4ee3\u7801\u5ba1\u67e5',
+    title: 'Part C: AI 代码审查 — 识别 AI 生成的 Bug',
     content: `## \u9898\u76ee\u63cf\u8ff0
 
 \u4ee5\u4e0b\u662f\u4e00\u6bb5 AI \u751f\u6210\u7684\u4ee3\u7801\uff0c\u7528\u4e8e\u5b9e\u73b0\u4e00\u4e2a\u7b80\u5355\u7684 LRU Cache\u3002\u4ee3\u7801\u4e2d\u5305\u542b\u82e5\u5e72 Bug \u548c\u8bbe\u8ba1\u95ee\u9898\uff0c\u8bf7\u627e\u51fa\u5e76\u4fee\u590d\u3002

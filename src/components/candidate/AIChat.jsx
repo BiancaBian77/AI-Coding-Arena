@@ -1,40 +1,60 @@
 import { useState, useRef, useEffect } from 'react';
-import { Send, Bot, User, Sparkles } from 'lucide-react';
+import { Send, Bot, Sparkles, Lock, ChevronDown, AlertTriangle } from 'lucide-react';
+
+const AI_MODELS = [
+  { id: 'gpt4o', name: 'GPT-4o', provider: 'OpenAI', badge: 'bg-emerald-100 text-emerald-700' },
+  { id: 'claude-sonnet', name: 'Claude Sonnet', provider: 'Anthropic', badge: 'bg-indigo-100 text-indigo-700' },
+  { id: 'deepseek-v3', name: 'DeepSeek V3', provider: 'DeepSeek', badge: 'bg-blue-100 text-blue-700' },
+  { id: 'kimi-k2', name: 'Kimi K2.5', provider: 'Moonshot', badge: 'bg-purple-100 text-purple-700' },
+  { id: 'qwen-max', name: 'Qwen Max', provider: 'Alibaba', badge: 'bg-orange-100 text-orange-700' },
+];
 
 const SIMULATED_RESPONSES = {
-  '\u4f60\u597d': '\u4f60\u597d\uff01\u6211\u662f\u4f60\u7684 AI \u52a9\u624b\uff0c\u5728\u672c\u6b21\u6d4b\u8bd5\u4e2d\u53ef\u4ee5\u4e3a\u4f60\u63d0\u4f9b\u7f16\u7a0b\u5e2e\u52a9\u3002\u4f60\u53ef\u4ee5\u95ee\u6211\u5173\u4e8e\u7b97\u6cd5\u601d\u8def\u3001\u8bed\u6cd5\u95ee\u9898\u6216\u8c03\u8bd5\u5efa\u8bae\u3002\u8bf7\u6ce8\u610f\uff0c\u6240\u6709\u5bf9\u8bdd\u90fd\u4f1a\u88ab\u8bb0\u5f55\u4f5c\u4e3a\u8bc4\u6d4b\u53c2\u8003\u3002',
-  '\u63d0\u793a': '\u6211\u53ef\u4ee5\u7ed9\u4f60\u4e00\u4e9b\u65b9\u5411\u6027\u7684\u63d0\u793a\uff0c\u4f46\u4e0d\u4f1a\u76f4\u63a5\u7ed9\u51fa\u5b8c\u6574\u7b54\u6848\u3002\u4f60\u60f3\u4e86\u89e3\u54ea\u4e2a\u90e8\u5206\u7684\u63d0\u793a\uff1f\n\n- Part A: \u4efb\u52a1\u8c03\u5ea6\u7b97\u6cd5\n- Part B: RAG Agent \u6784\u5efa\n- Part C: \u4ee3\u7801\u5ba1\u67e5',
-  'part a': '\u5173\u4e8e Part A \u4efb\u52a1\u8c03\u5ea6\u7b97\u6cd5\uff0c\u5efa\u8bae\u4f60\u8003\u8651\u4ee5\u4e0b\u601d\u8def\uff1a\n\n1. **\u8d2a\u5fc3\u7b56\u7565**\uff1a\u6309\u4f18\u5148\u7ea7\u964d\u5e8f\u6392\u5217\u4efb\u52a1\uff0c\u4f9d\u6b21\u5206\u914d\u7ed9\u6700\u5408\u9002\u7684 Agent\n2. **"\u6700\u5408\u9002"\u7684\u5b9a\u4e49**\uff1a\u53ef\u4ee5\u662f\u5269\u4f59\u5bb9\u91cf\u6700\u5927\u7684\u3001\u6216\u80fd\u529b\u503c\u6700\u63a5\u8fd1\u4efb\u52a1\u96be\u5ea6\u7684 Agent\n3. **\u6ce8\u610f\u8fb9\u754c\u6761\u4ef6**\uff1aAgent \u8d1f\u8f7d\u4e0d\u80fd\u8d85\u8fc7 max_load\n\n\u4f60\u60f3\u6df1\u5165\u4e86\u89e3\u54ea\u4e2a\u65b9\u9762\uff1f',
-  'part b': '\u5173\u4e8e Part B RAG Agent \u6784\u5efa\uff1a\n\n1. **\u6587\u6863\u5206\u5757**\uff1a\u53ef\u4ee5\u6309\u56fa\u5b9a\u957f\u5ea6\u6216\u6309\u6bb5\u843d\u5206\u5757\uff0c\u6ce8\u610f\u4fdd\u7559\u8bed\u4e49\u5b8c\u6574\u6027\n2. **\u68c0\u7d22\u65b9\u6848**\uff1aTF-IDF \u662f\u6700\u7b80\u5355\u7684\u65b9\u6848\uff0c\u7528 `Counter` \u7edf\u8ba1\u8bcd\u9891\u5373\u53ef\n3. **BM25 \u66f4\u4f18**\uff1a\u5728 TF-IDF \u57fa\u7840\u4e0a\u8003\u8651\u4e86\u6587\u6863\u957f\u5ea6\u5f52\u4e00\u5316\n\n\u9700\u8981\u6211\u89e3\u91ca BM25 \u7684\u516c\u5f0f\u5417\uff1f',
-  'part c': '\u5173\u4e8e Part C \u4ee3\u7801\u5ba1\u67e5\uff0c\u7ed9\u4f60\u51e0\u4e2a\u65b9\u5411\uff1a\n\n1. \u6ce8\u610f `dict` \u548c `list` \u7684\u65b9\u6cd5\u533a\u522b\n2. `clear()` \u65b9\u6cd5\u662f\u5426\u5e94\u8be5\u91cd\u7f6e capacity\uff1f\n3. `get_most_recent(n)` \u5f53 n \u5927\u4e8e\u5217\u8868\u957f\u5ea6\u65f6\u4f1a\u600e\u6837\uff1f\n4. \u6574\u4f53\u7684\u65f6\u95f4\u590d\u6742\u5ea6\u662f\u5426\u53ef\u4ee5\u4f18\u5316\uff1f\n\n\u4ed4\u7ec6\u770b\u6bcf\u4e2a\u65b9\u6cd5\u7684\u5b9e\u73b0\u7ec6\u8282\u3002',
-  'bm25': 'BM25 \u8bc4\u5206\u516c\u5f0f\uff1a\n\n```\nscore(q, d) = \u03a3 IDF(qi) \u00b7 (tf \u00b7 (k1 + 1)) / (tf + k1 \u00b7 (1 - b + b \u00b7 |d|/avgdl))\n```\n\n\u5176\u4e2d\uff1a\n- `tf` \u662f\u8bcd\u9891\n- `k1` \u901a\u5e38\u53d6 1.2-2.0\n- `b` \u901a\u5e38\u53d6 0.75\n- `|d|` \u662f\u6587\u6863\u957f\u5ea6\n- `avgdl` \u662f\u5e73\u5747\u6587\u6863\u957f\u5ea6\n\n\u5728 Python \u4e2d\u53ef\u4ee5\u7528 `math.log` \u8ba1\u7b97 IDF\u3002',
-  '\u65f6\u95f4\u590d\u6742\u5ea6': '\u5173\u4e8e LRU Cache \u7684\u65f6\u95f4\u590d\u6742\u5ea6\u5206\u6790\uff1a\n\n\u5f53\u524d\u5b9e\u73b0\u4f7f\u7528 `list` \u4f5c\u4e3a order \u8bb0\u5f55\uff1a\n- `list.remove()` \u662f O(n) \u64cd\u4f5c\n- `del list[0]` \u4e5f\u662f O(n) \u64cd\u4f5c\n\n\u8fd9\u5bfc\u81f4 `get()` \u548c `put()` \u90fd\u662f **O(n)**\u3002\n\n\u7406\u60f3\u7684 LRU Cache \u5e94\u8be5\u7528 **OrderedDict** \u6216 **\u53cc\u5411\u94fe\u8868 + \u54c8\u5e0c\u8868**\uff0c\u53ef\u4ee5\u505a\u5230 O(1)\u3002',
+  '你好': '你好！我是你选择的 AI 助手。在本部分测试中，你可以向我提问关于编程、架构设计的问题。\n\n注意：所有对话记录将作为评测参考，我们会评估你与 AI 协作的能力。',
+  '提示': '我可以给你一些方向性的提示，但不会直接给出完整答案。你想了解哪个方面？',
+  'rag': '关于 RAG Agent 构建，建议你考虑以下架构：\n\n1. **文档分块**：按段落分块，保留语义完整性\n2. **检索方案**：TF-IDF 是最简单的方案，BM25 更优\n3. **生成阶段**：将检索到的上下文拼接到 prompt 中\n4. **对话管理**：维护一个简单的 history 列表\n\n需要我深入某个部分吗？',
+  'bug': '关于 AI 代码审查，我的建议是：\n\n⚠️ **提醒：我的建议可能包含错误，请独立判断**\n\n1. 先通读整体代码结构\n2. 关注常见的 Python 陷阱（可变默认参数、浅拷贝等）\n3. 检查错误处理是否完善\n4. 验证缓存逻辑是否有失效机制\n\n你觉得哪个部分最可疑？',
+  'bm25': 'BM25 评分公式：\n\n```\nscore(q, d) = Σ IDF(qi) · (tf · (k1 + 1)) / (tf + k1 · (1 - b + b · |d|/avgdl))\n```\n\n其中：\n- `tf` 是词频\n- `k1` 通常取 1.2-2.0\n- `b` 通常取 0.75\n- `|d|` 是文档长度\n- `avgdl` 是平均文档长度\n\n在 Python 中可以用 `math.log` 计算 IDF。',
+  '时间复杂度': '关于时间复杂度分析：\n\n当前实现使用 `list` 作为 order 记录：\n- `list.remove()` 是 O(n) 操作\n- `del list[0]` 也是 O(n) 操作\n\n这导致 `get()` 和 `put()` 都是 **O(n)**。\n\n理想的 LRU Cache 应该用 **OrderedDict** 或 **双向链表 + 哈希表**，可以做到 O(1)。',
 };
 
 function getSimulatedResponse(input) {
   const lower = input.toLowerCase().trim();
-
   for (const [key, response] of Object.entries(SIMULATED_RESPONSES)) {
-    if (lower.includes(key.toLowerCase())) {
-      return response;
-    }
+    if (lower.includes(key.toLowerCase())) return response;
   }
-
-  return `\u597d\u7684\uff0c\u8ba9\u6211\u60f3\u60f3\u5173\u4e8e\u201c${input}\u201d\u7684\u5efa\u8bae\u3002\n\n\u8fd9\u662f\u4e00\u4e2a\u5f88\u597d\u7684\u95ee\u9898\u3002\u5728\u89e3\u51b3\u8fd9\u7c7b\u95ee\u9898\u65f6\uff0c\u5efa\u8bae\u4f60\uff1a\n1. \u5148\u660e\u786e\u8f93\u5165\u8f93\u51fa\u7684\u683c\u5f0f\u8981\u6c42\n2. \u8003\u8651\u8fb9\u754c\u60c5\u51b5\n3. \u4ece\u6700\u7b80\u5355\u7684\u89e3\u6cd5\u5f00\u59cb\uff0c\u518d\u9010\u6b65\u4f18\u5316\n\n\u4f60\u53ef\u4ee5\u66f4\u5177\u4f53\u5730\u63cf\u8ff0\u4f60\u9047\u5230\u7684\u56f0\u96be\u5417\uff1f`;
+  return `好的，让我想想关于"${input}"的建议。\n\n这是一个很好的问题。在解决这类问题时，建议你：\n1. 先明确输入输出的格式要求\n2. 考虑边界情况\n3. 从最简单的解法开始，再逐步优化\n\n你可以更具体地描述你遇到的困难吗？`;
 }
 
-export default function AIChat() {
-  const [messages, setMessages] = useState([
-    {
-      role: 'assistant',
-      content:
-        '\u4f60\u597d\uff01\u6211\u662f\u672c\u6b21\u6d4b\u8bd5\u7684 AI \u52a9\u624b\u3002\u4f60\u53ef\u4ee5\u5411\u6211\u63d0\u95ee\u5173\u4e8e\u7f16\u7a0b\u3001\u7b97\u6cd5\u7684\u95ee\u9898\u3002\n\n\u6ce8\u610f\uff1a\u6240\u6709\u5bf9\u8bdd\u8bb0\u5f55\u5c06\u4f5c\u4e3a\u8bc4\u6d4b\u7684\u4e00\u90e8\u5206\uff0c\u6211\u4eec\u4f1a\u8bc4\u4f30\u4f60\u4e0e AI \u534f\u4f5c\u7684\u80fd\u529b\u3002',
-    },
-  ]);
+export default function AIChat({ activePart = 'B' }) {
+  const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [selectedModel, setSelectedModel] = useState('gpt4o');
+  const [showModelPicker, setShowModelPicker] = useState(false);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
+
+  const isLocked = activePart === 'A';
+  const isWarningMode = activePart === 'C';
+  const currentModel = AI_MODELS.find(m => m.id === selectedModel);
+
+  // Reset welcome message when part changes
+  useEffect(() => {
+    if (activePart === 'A') {
+      setMessages([]);
+    } else if (activePart === 'B') {
+      setMessages([{
+        role: 'assistant',
+        content: `你好！我是 ${currentModel?.name || 'AI'} 助手。在 AI 协作开发部分，你可以向我提问任何编程相关问题。\n\n你的提问方式、采纳判断和协作效率都将作为评分依据。\n\n你也可以随时切换其他 AI 模型。`,
+      }]);
+    } else if (activePart === 'C') {
+      setMessages([{
+        role: 'assistant',
+        content: `⚠️ 注意：在 AI 代码审查部分，我的回答**可能包含错误**。\n\n你需要独立判断我的建议是否正确。盲目采纳错误建议会扣分，而正确识别我的错误会加分。\n\n准备好了就开始提问吧。`,
+      }]);
+    }
+  }, [activePart]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -42,52 +62,115 @@ export default function AIChat() {
 
   const handleSend = () => {
     const text = input.trim();
-    if (!text || isTyping) return;
-
-    setMessages((prev) => [...prev, { role: 'user', content: text }]);
+    if (!text || isTyping || isLocked) return;
+    setMessages(prev => [...prev, { role: 'user', content: text }]);
     setInput('');
     setIsTyping(true);
-
-    const delay = 800 + Math.random() * 1200;
     setTimeout(() => {
-      const response = getSimulatedResponse(text);
-      setMessages((prev) => [...prev, { role: 'assistant', content: response }]);
+      setMessages(prev => [...prev, { role: 'assistant', content: getSimulatedResponse(text) }]);
       setIsTyping(false);
-    }, delay);
+    }, 800 + Math.random() * 1200);
   };
 
   const handleKeyDown = (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleSend();
-    }
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); }
   };
 
-  const quickQuestions = ['\u63d0\u793a', 'Part A', 'Part B', 'Part C'];
+  // Locked state for Part A
+  if (isLocked) {
+    return (
+      <div className="flex flex-col h-full bg-slate-900">
+        <div className="flex items-center gap-2 px-4 py-2 bg-slate-800 border-b border-slate-700 shrink-0">
+          <Lock size={14} className="text-slate-500" />
+          <span className="text-sm font-medium text-slate-400">AI 助手</span>
+          <span className="ml-auto text-xs text-red-400 font-medium">已禁用</span>
+        </div>
+        <div className="flex-1 flex items-center justify-center bg-slate-900/50 p-8">
+          <div className="text-center max-w-xs">
+            <div className="w-16 h-16 rounded-2xl bg-slate-800 flex items-center justify-center mx-auto mb-4">
+              <Lock size={28} className="text-slate-600" />
+            </div>
+            <h3 className="text-base font-semibold text-slate-400 mb-2">独立编码模式</h3>
+            <p className="text-sm text-slate-500 leading-relaxed">
+              Part A 考察独立编码能力，AI 助手在此部分不可用。请独立完成编码任务。
+            </p>
+            <div className="mt-4 px-4 py-2 bg-slate-800 rounded-lg">
+              <p className="text-xs text-slate-500">
+                切换到 Part B 后可使用 AI 助手
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col h-full bg-slate-900">
-      {/* Header */}
+      {/* Header with model selector */}
       <div className="flex items-center gap-2 px-4 py-2 bg-slate-800 border-b border-slate-700 shrink-0">
         <div className="w-6 h-6 rounded-full bg-indigo-600 flex items-center justify-center">
           <Sparkles size={12} className="text-white" />
         </div>
-        <span className="text-sm font-medium text-slate-200">AI \u52a9\u624b</span>
-        <span className="flex items-center gap-1 ml-auto">
-          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-          <span className="text-xs text-slate-400">online</span>
-        </span>
+        <span className="text-sm font-medium text-slate-200">AI 助手</span>
+
+        {/* Model selector */}
+        <div className="relative ml-auto">
+          <button
+            onClick={() => setShowModelPicker(!showModelPicker)}
+            className="flex items-center gap-1.5 px-2 py-1 rounded-md bg-slate-700 hover:bg-slate-600 transition-colors"
+          >
+            <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded ${currentModel?.badge}`}>
+              {currentModel?.name}
+            </span>
+            <ChevronDown size={12} className="text-slate-400" />
+          </button>
+
+          {showModelPicker && (
+            <>
+              <div className="fixed inset-0 z-10" onClick={() => setShowModelPicker(false)} />
+              <div className="absolute right-0 top-full mt-1 w-56 bg-slate-800 rounded-lg border border-slate-700 shadow-xl z-20 py-1">
+                <div className="px-3 py-2 border-b border-slate-700">
+                  <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">选择 AI 模型</span>
+                </div>
+                {AI_MODELS.map(model => (
+                  <button
+                    key={model.id}
+                    onClick={() => { setSelectedModel(model.id); setShowModelPicker(false); }}
+                    className={`w-full flex items-center justify-between px-3 py-2 hover:bg-slate-700 transition-colors ${
+                      selectedModel === model.id ? 'bg-slate-700/50' : ''
+                    }`}
+                  >
+                    <div>
+                      <span className="text-sm text-slate-200 font-medium">{model.name}</span>
+                      <span className="text-xs text-slate-500 ml-2">{model.provider}</span>
+                    </div>
+                    {selectedModel === model.id && <span className="w-1.5 h-1.5 rounded-full bg-indigo-400" />}
+                  </button>
+                ))}
+              </div>
+            </>
+          )}
+        </div>
       </div>
+
+      {/* Warning banner for Part C */}
+      {isWarningMode && (
+        <div className="px-3 py-2 bg-amber-900/30 border-b border-amber-800/30 flex items-center gap-2 shrink-0">
+          <AlertTriangle size={13} className="text-amber-400 flex-shrink-0" />
+          <span className="text-xs text-amber-300">AI 回答可能包含错误，请独立判断后采纳</span>
+        </div>
+      )}
 
       {/* Quick question chips */}
       <div className="px-3 py-2 flex gap-1.5 flex-wrap shrink-0 bg-slate-800/50 border-b border-slate-700/50">
-        {quickQuestions.map((q) => (
+        {(activePart === 'B'
+          ? ['架构建议', 'RAG 原理', 'API 设计', '调试帮助']
+          : ['分析代码', '可能的 Bug', '性能问题', '最佳实践']
+        ).map(q => (
           <button
             key={q}
-            onClick={() => {
-              setInput(q);
-              setTimeout(() => inputRef.current?.focus(), 0);
-            }}
+            onClick={() => { setInput(q); setTimeout(() => inputRef.current?.focus(), 0); }}
             className="px-2.5 py-1 text-xs text-indigo-300 bg-indigo-950 hover:bg-indigo-900 border border-indigo-800 rounded-full transition-colors"
           >
             {q}
@@ -115,12 +198,9 @@ export default function AIChat() {
             </div>
           </div>
         ))}
-
         {isTyping && (
           <div className="flex gap-2">
-            <div className="w-6 h-6 rounded-full bg-indigo-600 flex items-center justify-center shrink-0 text-[10px] font-bold text-white">
-              AI
-            </div>
+            <div className="w-6 h-6 rounded-full bg-indigo-600 flex items-center justify-center shrink-0 text-[10px] font-bold text-white">AI</div>
             <div className="bg-white px-4 py-3 rounded-lg rounded-tl-sm border border-gray-200 shadow-sm">
               <div className="flex gap-1">
                 <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
@@ -139,9 +219,9 @@ export default function AIChat() {
           <textarea
             ref={inputRef}
             value={input}
-            onChange={(e) => setInput(e.target.value)}
+            onChange={e => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="\u8f93\u5165\u4f60\u7684\u95ee\u9898..."
+            placeholder="输入你的问题..."
             rows={1}
             className="flex-1 resize-none text-sm text-gray-700 placeholder-gray-400 outline-none bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 focus:border-indigo-400 focus:ring-1 focus:ring-indigo-100 leading-relaxed max-h-24"
             style={{ minHeight: '36px' }}
@@ -149,7 +229,7 @@ export default function AIChat() {
           <button
             onClick={handleSend}
             disabled={!input.trim() || isTyping}
-            className="p-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-500 disabled:opacity-30 disabled:hover:bg-indigo-600 transition-colors shrink-0"
+            className="p-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-500 disabled:opacity-30 transition-colors shrink-0"
           >
             <Send size={14} />
           </button>
@@ -161,25 +241,16 @@ export default function AIChat() {
 
 function MessageContent({ content, isUser }) {
   if (isUser) return <span className="whitespace-pre-wrap">{content}</span>;
-
   const parts = content.split(/(```[\s\S]*?```|\*\*[^*]+\*\*)/g);
   return (
     <span className="whitespace-pre-wrap">
       {parts.map((part, i) => {
         if (part.startsWith('```') && part.endsWith('```')) {
           const code = part.slice(3, -3).replace(/^\w+\n/, '');
-          return (
-            <code key={i} className="block bg-slate-900 text-emerald-300 rounded px-3 py-2.5 my-1.5 text-xs font-mono leading-relaxed">
-              {code}
-            </code>
-          );
+          return <code key={i} className="block bg-slate-900 text-emerald-300 rounded px-3 py-2.5 my-1.5 text-xs font-mono leading-relaxed">{code}</code>;
         }
         if (part.startsWith('**') && part.endsWith('**')) {
-          return (
-            <strong key={i} className="font-semibold text-gray-800">
-              {part.slice(2, -2)}
-            </strong>
-          );
+          return <strong key={i} className="font-semibold text-gray-800">{part.slice(2, -2)}</strong>;
         }
         return <span key={i}>{part}</span>;
       })}

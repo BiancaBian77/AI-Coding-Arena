@@ -25,9 +25,9 @@ export default function TestHeader({ activePart, onPartChange, totalMinutes = 10
   const isWarning = secondsLeft < 1800;
 
   const parts = [
-    { key: 'A', label: 'Part A \u00b7 \u7b97\u6cd5' },
-    { key: 'B', label: 'Part B \u00b7 \u9879\u76ee' },
-    { key: 'C', label: 'Part C \u00b7 \u5ba1\u67e5' },
+    { key: 'A', label: 'Part A · 独立编码' },
+    { key: 'B', label: 'Part B · AI 协作开发' },
+    { key: 'C', label: 'Part C · AI 代码审查' },
   ];
 
   const handleSubmit = () => {
