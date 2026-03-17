@@ -15,13 +15,17 @@ import InviteCandidates from './pages/InviteCandidates'
 import Analytics from './pages/Analytics'
 import InterviewerSettings from './pages/InterviewerSettings'
 import AdminDashboard from './pages/AdminDashboard'
+import ProductIntro from './pages/ProductIntro'
+import AssessmentSystem from './pages/AssessmentSystem'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <HashRouter>
       <Routes>
-        {/* Landing */}
+        {/* Landing & Info */}
         <Route path="/" element={<Home />} />
+        <Route path="/product" element={<ProductIntro />} />
+        <Route path="/assessment" element={<AssessmentSystem />} />
 
         {/* Candidate */}
         <Route path="/login" element={<CandidateLogin />} />

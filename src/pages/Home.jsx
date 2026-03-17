@@ -82,29 +82,21 @@ export default function Home() {
 
           {/* Center links */}
           <div className="hidden md:flex items-center gap-8">
-            <a href="#features" className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">
+            <Link to="/product" className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">
               产品介绍
-            </a>
-            <a href="#dimensions" className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">
+            </Link>
+            <Link to="/assessment" className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">
               评测体系
-            </a>
+            </Link>
           </div>
 
-          {/* Right buttons */}
-          <div className="flex items-center gap-3">
-            <Link
-              to="/login"
-              className="hidden sm:inline-flex items-center px-4 py-2 text-sm font-medium text-indigo-600 border border-indigo-200 rounded-lg hover:bg-indigo-50 transition-all"
-            >
-              候选人入口
-            </Link>
-            <Link
-              to="/interviewer"
-              className="inline-flex items-center px-4 py-2 text-sm font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-all shadow-sm"
-            >
-              企业登录
-            </Link>
-          </div>
+          {/* Right button */}
+          <Link
+            to="/login"
+            className="inline-flex items-center px-4 py-2 text-sm font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-all shadow-sm"
+          >
+            企业登录
+          </Link>
         </div>
       </nav>
 
@@ -130,7 +122,7 @@ export default function Home() {
               to="/login"
               className="btn-primary text-base px-8 py-3.5"
             >
-              开始体验
+              候选人入口
               <ArrowRight size={18} />
             </Link>
             <Link
