@@ -5,15 +5,23 @@ import TestHeader from '../components/candidate/TestHeader';
 import ProblemPanel from '../components/candidate/ProblemPanel';
 import CodeEditor from '../components/candidate/CodeEditor';
 import AIChat from '../components/candidate/AIChat';
+import { useAntiCheat, AntiCheatBanner, AntiCheatOverlay } from '../components/candidate/AntiCheat';
 
 export default function CandidateTest() {
   const [activePart, setActivePart] = useState('A');
   const [language, setLanguage] = useState('Python');
+  const { violations, violationCount, violationLog, showOverlay } = useAntiCheat();
 
   return (
     <div className="h-screen flex flex-col bg-slate-900 overflow-hidden">
       {/* Top bar */}
-      <TestHeader activePart={activePart} onPartChange={setActivePart} />
+      <TestHeader activePart={activePart} onPartChange={setActivePart} violationCount={violationCount} />
+
+      {/* Anti-cheat banner */}
+      <AntiCheatBanner violationCount={violationCount} />
+
+      {/* Anti-cheat overlay */}
+      <AntiCheatOverlay visible={showOverlay} />
 
       {/* Main IDE layout */}
       <div className="flex-1 min-h-0">

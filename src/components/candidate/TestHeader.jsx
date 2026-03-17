@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Clock, Send, AlertTriangle } from 'lucide-react';
+import { AntiCheatShield } from './AntiCheat';
 
-export default function TestHeader({ activePart, onPartChange, totalMinutes = 100 }) {
+export default function TestHeader({ activePart, onPartChange, totalMinutes = 100, violationCount = 0 }) {
   const [secondsLeft, setSecondsLeft] = useState(totalMinutes * 60);
   const [showSubmitConfirm, setShowSubmitConfirm] = useState(false);
 
@@ -64,6 +65,9 @@ export default function TestHeader({ activePart, onPartChange, totalMinutes = 10
 
         {/* Right: Timer + Submit */}
         <div className="flex items-center gap-3">
+          <span className="mr-1">
+            <AntiCheatShield violationCount={violationCount} />
+          </span>
           <div
             className={`flex items-center gap-1.5 px-2.5 py-1 rounded ${
               isUrgent

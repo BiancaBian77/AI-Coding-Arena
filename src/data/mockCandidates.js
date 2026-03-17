@@ -191,6 +191,7 @@ const mockCandidates = [
       errorCorrections: 3,
       avgResponseTime: '2.1s',
     },
+    violations: { tabSwitches: 1, windowBlurs: 0, copyAttempts: 0, total: 1 },
     notes: '',
   },
   {
@@ -214,6 +215,7 @@ const mockCandidates = [
       errorCorrections: 1,
       avgResponseTime: '1.8s',
     },
+    violations: { tabSwitches: 0, windowBlurs: 0, copyAttempts: 0, total: 0 },
     notes: '技术能力突出，沟通表达清晰。',
   },
   {
@@ -237,6 +239,7 @@ const mockCandidates = [
       errorCorrections: 5,
       avgResponseTime: '3.2s',
     },
+    violations: { tabSwitches: 3, windowBlurs: 2, copyAttempts: 1, total: 6 },
     notes: '',
   },
   {
@@ -260,6 +263,7 @@ const mockCandidates = [
       errorCorrections: 8,
       avgResponseTime: '4.5s',
     },
+    violations: { tabSwitches: 5, windowBlurs: 3, copyAttempts: 2, total: 10 },
     notes: '过度依赖 AI，独立编码能力不足。',
   },
   {
@@ -283,6 +287,7 @@ const mockCandidates = [
       errorCorrections: 0,
       avgResponseTime: '1.5s',
     },
+    violations: { tabSwitches: 0, windowBlurs: 0, copyAttempts: 0, total: 0 },
     notes: '非常优秀，推荐进入终面。',
   },
   {
@@ -306,6 +311,7 @@ const mockCandidates = [
       errorCorrections: 2,
       avgResponseTime: '2.4s',
     },
+    violations: { tabSwitches: 2, windowBlurs: 1, copyAttempts: 0, total: 3 },
     notes: '',
   },
   {
@@ -329,6 +335,7 @@ const mockCandidates = [
       errorCorrections: 6,
       avgResponseTime: '3.8s',
     },
+    violations: { tabSwitches: 4, windowBlurs: 2, copyAttempts: 1, total: 7 },
     notes: '',
   },
   {
@@ -352,6 +359,7 @@ const mockCandidates = [
       errorCorrections: 12,
       avgResponseTime: '5.1s',
     },
+    violations: { tabSwitches: 8, windowBlurs: 5, copyAttempts: 3, total: 16 },
     notes: '基础薄弱，完全依赖 AI 完成任务。',
   },
 ];

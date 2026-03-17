@@ -1,31 +1,45 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  Clock,
-  Shield,
-  Bot,
-  CheckCircle,
   ChevronRight,
-  Eye,
   Code2,
   Sparkles,
   Brain,
+  ChevronDown,
 } from 'lucide-react';
 
+const ROLES = [
+  { value: 'candidate', label: '候选人' },
+  { value: 'interviewer', label: '面试官' },
+  { value: 'admin', label: '管理员' },
+];
+
 export default function CandidateLogin() {
-  const [agreed, setAgreed] = useState(false);
+  const [role, setRole] = useState('candidate');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [inviteCode, setInviteCode] = useState('');
+  const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const handleStart = () => {
-    if (!agreed || !name.trim() || !email.trim()) return;
-    navigate('/test');
+  const handleLogin = () => {
+    if (!name.trim() || !email.trim()) return;
+    if (role === 'candidate' && !inviteCode.trim()) return;
+    if (role !== 'candidate' && !password.trim()) return;
+
+    if (role === 'candidate') navigate('/test/prepare');
+    else if (role === 'interviewer') navigate('/interviewer');
+    else if (role === 'admin') navigate('/admin');
   };
+
+  const canSubmit =
+    name.trim() &&
+    email.trim() &&
+    (role === 'candidate' ? inviteCode.trim() : password.trim());
 
   return (
     <div className="min-h-screen flex flex-col lg:flex-row">
-      {/* ── Left Panel ── */}
+      {/* Left Panel */}
       <div className="lg:w-[45%] bg-gradient-to-br from-indigo-900 via-indigo-800 to-indigo-700 text-white relative overflow-hidden flex flex-col justify-center px-8 sm:px-12 lg:px-16 py-16 lg:py-0">
         {/* Decorative elements */}
         <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-600/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
@@ -91,16 +105,40 @@ export default function CandidateLogin() {
         </div>
       </div>
 
-      {/* ── Right Panel ── */}
+      {/* Right Panel */}
       <div className="lg:w-[55%] bg-white flex items-center justify-center px-6 sm:px-12 lg:px-16 py-12 lg:py-0">
         <div className="w-full max-w-lg">
           <h2 className="text-2xl font-bold text-gray-900 mb-1">
-            开始技术评测
+            登录 AI Coding Arena
           </h2>
-          <p className="text-gray-500 mb-8">请填写信息并阅读评测说明</p>
+          <p className="text-gray-500 mb-8">请选择身份并填写信息</p>
 
-          {/* Name + Email inputs */}
-          <div className="space-y-4 mb-6">
+          <div className="space-y-4 mb-8">
+            {/* Role selector */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                选择身份
+              </label>
+              <div className="relative">
+                <select
+                  value={role}
+                  onChange={(e) => setRole(e.target.value)}
+                  className="w-full px-4 py-2.5 text-sm border border-gray-200 rounded-xl focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all appearance-none bg-white"
+                >
+                  {ROLES.map((r) => (
+                    <option key={r.value} value={r.value}>
+                      {r.label}
+                    </option>
+                  ))}
+                </select>
+                <ChevronDown
+                  size={16}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
+                />
+              </div>
+            </div>
+
+            {/* Name */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1.5">
                 姓名
@@ -113,6 +151,8 @@ export default function CandidateLogin() {
                 className="w-full px-4 py-2.5 text-sm border border-gray-200 rounded-xl focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all"
               />
             </div>
+
+            {/* Email */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1.5">
                 邮箱
@@ -125,127 +165,44 @@ export default function CandidateLogin() {
                 className="w-full px-4 py-2.5 text-sm border border-gray-200 rounded-xl focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all"
               />
             </div>
-          </div>
 
-          {/* Test info cards */}
-          <div className="grid grid-cols-3 gap-3 mb-6">
-            <div className="bg-gray-50 rounded-xl p-4 text-center">
-              <Clock size={20} className="mx-auto mb-2 text-indigo-500" />
-              <div className="text-sm font-semibold text-gray-800">
-                100 分钟
+            {/* Invite code (candidate) or Password (interviewer/admin) */}
+            {role === 'candidate' ? (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                  邀请码
+                </label>
+                <input
+                  type="text"
+                  value={inviteCode}
+                  onChange={(e) => setInviteCode(e.target.value)}
+                  placeholder="请输入邀请码"
+                  className="w-full px-4 py-2.5 text-sm border border-gray-200 rounded-xl focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all"
+                />
               </div>
-              <div className="text-xs text-gray-400">测试时长</div>
-            </div>
-            <div className="bg-gray-50 rounded-xl p-4 text-center">
-              <Bot size={20} className="mx-auto mb-2 text-indigo-500" />
-              <div className="text-sm font-semibold text-gray-800">3 部分</div>
-              <div className="text-xs text-gray-400">题目数量</div>
-            </div>
-            <div className="bg-gray-50 rounded-xl p-4 text-center">
-              <Shield size={20} className="mx-auto mb-2 text-indigo-500" />
-              <div className="text-sm font-semibold text-gray-800">
-                五维评分
+            ) : (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                  密码
+                </label>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="请输入密码"
+                  className="w-full px-4 py-2.5 text-sm border border-gray-200 rounded-xl focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all"
+                />
               </div>
-              <div className="text-xs text-gray-400">评分体系</div>
-            </div>
+            )}
           </div>
 
-          {/* Test structure */}
-          <div className="mb-6">
-            <h3 className="text-sm font-semibold text-gray-700 mb-3">
-              测试内容
-            </h3>
-            <div className="space-y-2">
-              {[
-                {
-                  part: 'A',
-                  title: 'Agent 任务调度算法',
-                  desc: '设计多 Agent 系统的任务调度方案',
-                  tag: '算法',
-                },
-                {
-                  part: 'B',
-                  title: '构建 RAG Agent',
-                  desc: '实现基于检索增强生成的问答系统',
-                  tag: '开放项目',
-                },
-                {
-                  part: 'C',
-                  title: 'AI 代码审查',
-                  desc: '找出并修复 AI 生成代码中的 Bug',
-                  tag: 'AI 审查',
-                },
-              ].map((item) => (
-                <div
-                  key={item.part}
-                  className="flex items-center gap-3 p-3 rounded-xl border border-gray-100 hover:border-indigo-100 hover:bg-indigo-50/30 transition-colors"
-                >
-                  <div className="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center text-sm font-bold shrink-0">
-                    {item.part}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="text-sm font-medium text-gray-800">
-                      {item.title}
-                    </div>
-                    <div className="text-xs text-gray-400">{item.desc}</div>
-                  </div>
-                  <span className="px-2 py-0.5 text-xs font-medium bg-indigo-50 text-indigo-600 rounded-full shrink-0">
-                    {item.tag}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Rules */}
-          <div className="bg-amber-50 border border-amber-100 rounded-xl p-4 mb-6">
-            <h3 className="text-sm font-semibold text-amber-800 mb-2 flex items-center gap-1.5">
-              <Eye size={14} />
-              注意事项
-            </h3>
-            <ul className="space-y-1.5 text-xs text-amber-700 leading-relaxed">
-              <li className="flex items-start gap-2">
-                <CheckCircle size={12} className="mt-0.5 shrink-0" />
-                <span>AI 助手可以自由使用，与 AI 的所有交互将被记录</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <CheckCircle size={12} className="mt-0.5 shrink-0" />
-                <span>
-                  评测将综合考虑代码质量、解题思路和 AI 协作能力
-                </span>
-              </li>
-              <li className="flex items-start gap-2">
-                <CheckCircle size={12} className="mt-0.5 shrink-0" />
-                <span>可以在三个部分之间自由切换，请合理分配时间</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <CheckCircle size={12} className="mt-0.5 shrink-0" />
-                <span>提交后无法修改，请确认所有代码已保存</span>
-              </li>
-            </ul>
-          </div>
-
-          {/* Agreement */}
-          <label className="flex items-start gap-2.5 cursor-pointer mb-6">
-            <input
-              type="checkbox"
-              checked={agreed}
-              onChange={(e) => setAgreed(e.target.checked)}
-              className="mt-0.5 w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-            />
-            <span className="text-xs text-gray-500 leading-relaxed">
-              我已阅读并理解以上规则。我承诺独立完成测试，测试过程中的所有操作（包括代码编辑、AI
-              对话）均可被记录和审查。
-            </span>
-          </label>
-
-          {/* Start button */}
+          {/* Login button */}
           <button
-            onClick={handleStart}
-            disabled={!agreed || !name.trim() || !email.trim()}
+            onClick={handleLogin}
+            disabled={!canSubmit}
             className="w-full btn-primary py-3.5 text-base rounded-xl"
           >
-            进入测试
+            登录
             <ChevronRight size={18} />
           </button>
 
