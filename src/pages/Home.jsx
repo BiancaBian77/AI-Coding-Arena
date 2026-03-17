@@ -9,7 +9,6 @@ import {
   Globe,
   ArrowRight,
   CheckCircle,
-  ChevronRight,
 } from 'lucide-react';
 
 const features = [
@@ -47,24 +46,6 @@ const dimensions = [
   { icon: Globe, label: '跨领域能力', desc: '前后端、DevOps 等知识广度', score: 72, color: 'bg-amber-500' },
 ];
 
-const footerCols = [
-  {
-    title: '产品',
-    links: ['技术评测', 'AI 面试助手', '能力报告', 'API 接口'],
-  },
-  {
-    title: '解决方案',
-    links: ['校园招聘', '社会招聘', '内部考核', '培训认证'],
-  },
-  {
-    title: '资源',
-    links: ['帮助中心', '开发文档', '更新日志', '博客'],
-  },
-  {
-    title: '关于',
-    links: ['关于我们', '联系我们', '隐私政策', '服务条款'],
-  },
-];
 
 export default function Home() {
   return (
@@ -127,9 +108,10 @@ export default function Home() {
             </Link>
             <Link
               to="/interviewer"
-              className="btn-secondary text-base px-8 py-3.5"
+              className="btn-primary text-base px-8 py-3.5"
             >
               面试官入口
+              <ArrowRight size={18} />
             </Link>
           </div>
 
@@ -328,57 +310,14 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── CTA Section ── */}
-      <section className="py-24 bg-gradient-to-br from-indigo-600 to-indigo-800">
-        <div className="max-w-3xl mx-auto px-6 text-center">
-          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
-            Ready to transform your technical hiring?
-          </h2>
-          <p className="text-lg text-indigo-200 mb-10">
-            加入 500+ 企业，开启 AI 时代的智能技术评测
-          </p>
-          <Link
-            to="/login"
-            className="inline-flex items-center gap-2 px-8 py-4 text-base font-semibold text-indigo-600 bg-white rounded-xl hover:bg-indigo-50 transition-all shadow-lg"
-          >
-            免费开始使用
-            <ChevronRight size={18} />
-          </Link>
-        </div>
-      </section>
-
-      {/* ── Footer ── */}
-      <footer className="bg-gray-900 text-gray-400">
-        <div className="max-w-6xl mx-auto px-6 py-16">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {footerCols.map((col) => (
-              <div key={col.title}>
-                <h4 className="text-sm font-semibold text-white mb-4">
-                  {col.title}
-                </h4>
-                <ul className="space-y-2.5">
-                  {col.links.map((link) => (
-                    <li key={link}>
-                      <span className="text-sm hover:text-white transition-colors cursor-pointer">
-                        {link}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
+      {/* ── Simple Footer ── */}
+      <footer className="border-t border-gray-100 py-6">
+        <div className="max-w-6xl mx-auto px-6 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span className="text-lg">⚡</span>
+            <span className="text-sm font-semibold text-gray-900">AI Coding Arena</span>
           </div>
-          <div className="border-t border-gray-800 mt-12 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-2">
-              <span className="text-lg">⚡</span>
-              <span className="text-sm font-semibold text-white">
-                AI Coding Arena
-              </span>
-            </div>
-            <p className="text-xs text-gray-500">
-              © 2026 AI Coding Arena. All rights reserved.
-            </p>
-          </div>
+          <p className="text-xs text-gray-400">© 2026 AI Coding Arena</p>
         </div>
       </footer>
     </div>
