@@ -62,11 +62,11 @@ export default function Home() {
           </Link>
 
           {/* Center links */}
-          <div className="hidden md:flex items-center gap-8">
-            <Link to="/product" className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">
+          <div className="hidden md:flex items-center gap-10">
+            <Link to="/product" className="text-base font-medium text-gray-600 hover:text-indigo-600 transition-colors">
               产品介绍
             </Link>
-            <Link to="/assessment" className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">
+            <Link to="/assessment" className="text-base font-medium text-gray-600 hover:text-indigo-600 transition-colors">
               评测体系
             </Link>
           </div>
@@ -74,7 +74,7 @@ export default function Home() {
           {/* Right button */}
           <Link
             to="/login"
-            className="inline-flex items-center px-4 py-2 text-sm font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-all shadow-sm"
+            className="inline-flex items-center px-5 py-2.5 text-sm font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-all shadow-sm"
           >
             企业登录
           </Link>
