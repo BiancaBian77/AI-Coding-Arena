@@ -1,6 +1,6 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { HashRouter, Routes, Route } from 'react-router-dom'
 import './index.css'
 import Home from './pages/Home'
 import CandidateLogin from './pages/CandidateLogin'
@@ -18,7 +18,7 @@ import AdminDashboard from './pages/AdminDashboard'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <BrowserRouter>
+    <HashRouter>
       <Routes>
         {/* Landing */}
         <Route path="/" element={<Home />} />
@@ -42,6 +42,6 @@ createRoot(document.getElementById('root')).render(
         {/* Admin */}
         <Route path="/admin" element={<AdminDashboard />} />
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   </StrictMode>,
 )
