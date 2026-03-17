@@ -107,7 +107,7 @@ export default function Home() {
               <ArrowRight size={18} />
             </Link>
             <Link
-              to="/interviewer"
+              to="/interviewer/login"
               className="btn-primary text-base px-8 py-3.5"
             >
               面试官入口

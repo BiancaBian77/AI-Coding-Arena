@@ -15,6 +15,7 @@ import InviteCandidates from './pages/InviteCandidates'
 import Analytics from './pages/Analytics'
 import InterviewerSettings from './pages/InterviewerSettings'
 import AdminDashboard from './pages/AdminDashboard'
+import InterviewerLogin from './pages/InterviewerLogin'
 import ProductIntro from './pages/ProductIntro'
 import AssessmentSystem from './pages/AssessmentSystem'
 
@@ -33,6 +34,7 @@ createRoot(document.getElementById('root')).render(
         <Route path="/test" element={<CandidateTest />} />
 
         {/* Interviewer */}
+        <Route path="/interviewer/login" element={<InterviewerLogin />} />
         <Route path="/interviewer" element={<InterviewerDashboard />} />
         <Route path="/interviewer/candidates" element={<CandidateList />} />
         <Route path="/interviewer/candidate/:id" element={<CandidateDetail />} />
